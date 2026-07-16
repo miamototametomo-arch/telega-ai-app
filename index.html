@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casino WebApp</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0d0d0d;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 400px;
+            width: 100%;
+            background: #1a1a1a;
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 0 30px rgba(0, 255, 200, 0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .balance {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00ffc8;
+        }
+        .online {
+            font-size: 14px;
+            color: #888;
+        }
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        .menu-btn {
+            background: #2a2a2a;
+            padding: 16px 0;
+            border-radius: 16px;
+            text-align: center;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            border: none;
+            color: #fff;
+        }
+        .menu-btn:active { transform: scale(0.95); }
+        .menu-btn.green { background: #00c853; }
+        .menu-btn.red { background: #d50000; }
+        .menu-btn.purple { background: #aa00ff; }
+
+        .game-area {
+            background: #121212;
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 20px;
+            min-height: 300px;
+            position: relative;
+        }
+
+        /* Aviator */
+        .graph {
+            width: 100%;
+            height: 150px;
+            background: #0a0a0a;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+        .graph .line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(0deg, #00ffc8 0%, transparent 80%);
+            clip-path: polygon(0% 100%, 0% 80%, 20% 60%, 40% 40%, 60% 30%, 80% 10%, 100% 0%, 100% 100%);
+        }
+        .graph .label {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #00ffc8;
+        }
+
+        /* Miner */
+        .miner-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+        }
+        .miner-cell {
+            aspect-ratio: 1;
+            background: #2a2a2a;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .miner-cell:active { transform: scale(0.9); }
+        .miner-cell.opened { background: #1a1a1a; }
+
+        .cashout-btn {
+            width: 100%;
+            padding: 16px;
+            background: #00c853;
+            border: none;
+            border-radius: 16px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #fff;
+            margin-top: 16px;
+            cursor: pointer;
+        }
+        .cashout-btn:active { transform: scale(0.96); }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #555;
+            text-align: center;
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+[16.07.2026 21:12] ClownFr_: <div class="container" id="app">
+    <!-- Хедер -->
+    <div class="header">
+        <div class="balance" id="balanceDisplay">💰 100.00$</div>
+        <div class="online" id="onlineDisplay">👥 389</div>
+    </div>
+
+    <!-- Меню -->
+    <div class="menu-grid">
+        <button class="menu-btn green" onclick="openGame('aviator')">✈️ Aviator</button>
+        <button class="menu-btn purple" onclick="openGame('rocket')">🚀 Rocket</button>
+        <button class="menu-btn" onclick="openGame('miner')">⛏️ Майнер</button>
+        <button class="menu-btn" onclick="sendData('deposit')">📥 Депозит</button>
+        <button class="menu-btn" onclick="sendData('withdraw')">📤 Вывод</button>
+        <button class="menu-btn" onclick="sendData('language')">🌐 Язык</button>
+    </div>
+
+    <!-- Игровая область -->
+    <div class="game-area" id="gameArea">
+        <div id="gameContent">
+            <p style="text-align:center;color:#888;">Выберите игру</p>
+        </div>
+    </div>
+
+    <div class="footer">Casino Bot • v3.29.1</div>
+</div>
+
+<script>
+    // ===== ДАННЫЕ =====
+    let balance = 100.0;
+    let gameActive = false;
+
+    // ===== ОБНОВЛЕНИЕ БАЛАНСА =====
+    function updateBalance(newBalance) {
+        balance = newBalance;
+        document.getElementById('balanceDisplay').textContent = 💰 ${balance.toFixed(2)}$;
+    }
+
+    // ===== ОТПРАВКА ДАННЫХ В БОТ =====
+    function sendData(action, payload = {}) {
+        // Здесь вы отправляете данные через Telegram WebApp
+        if (window.Telegram && Telegram.WebApp) {
+            Telegram.WebApp.sendData(JSON.stringify({ action, ...payload }));
+        } else {
+            alert(Данные отправлены: ${action});
+        }
+    }
+
+    // ===== ОТКРЫТИЕ ИГРЫ =====
+    function openGame(game) {
+        const content = document.getElementById('gameContent');
+        gameActive = false;
+
+        if (game === 'aviator') {
+            content.innerHTML = 
+                <div class="graph">
+                    <div class="line"></div>
+                    <div class="label" id="coefLabel">1.00x</div>
+                </div>
+                <button class="cashout-btn" id="cashoutBtn" onclick="cashoutAviator()">💰 Кэшаут</button>
+                <p style="text-align:center;color:#888;margin-top:8px;">Самолёт летит...</p>
+            ;
+            // Имитация полёта
+            let coef = 1.0;
+            const coefLabel = document.getElementById('coefLabel');
+            const interval = setInterval(() => {
+                coef += 0.02 + Math.random() * 0.05;
+                coefLabel.textContent = coef.toFixed(2) + 'x';
+                if (coef > 5.0 || Math.random() < 0.01) {
+                    clearInterval(interval);
+                    coefLabel.textContent = '💥 CRASH';
+                    document.getElementById('cashoutBtn').style.display = 'none';
+                    sendData('aviator_result', { win: 0 });
+                }
+            }, 100);
+            window._aviatorInterval = interval;
+            gameActive = true;
+
+        } else if (game === 'rocket') {
+            content.innerHTML = 
+                <div style="text-align:center;font-size:48px;">🚀</div>
+                <div style="text-align:center;font-size:32px;margin:16px 0;" id="rocketCoef">1.00x</div>
+                <button class="cashout-btn" id="rocketCashout" onclick="cashoutRocket()">💰 Кэшаут</button>
+            ;
+            let coef = 1.0;
+            const coefLabel = document.getElementById('rocketCoef');
+            const interval = setInterval(() => {
+                coef += 0.05 + Math.random() * 0.08;
+                coefLabel.textContent = coef.toFixed(2) + 'x';
+                if (coef > 10.0 || Math.random() < 0.008) {
+                    clearInterval(interval);
+                    coefLabel.textContent = '💥 EXPLODED';
+                    document.getElementById('rocketCashout').style.display = 'none';
+                    sendData('rocket_result', { win: 0 });
+                }
+            }, 100);
+            window._rocketInterval = interval;
+            gameActive = true;
+[16.07.2026 21:12] ClownFr_: } else if (game === 'miner') {
+            // Генерируем поле 5x5
+            let field = [];
+            let mines = new Set();
+            let gems = new Set();
+            while (mines.size < 4) mines.add(Math.floor(Math.random() * 25));
+            while (gems.size < 3) {
+                let pos = Math.floor(Math.random() * 25);
+                if (!mines.has(pos)) gems.add(pos);
+            }
+            for (let i = 0; i < 25; i++) {
+                let icon = '⬛';
+                if (mines.has(i)) icon = '●';
+                else if (gems.has(i)) icon = '◆';
+                field.push({ icon, opened: false });
+            }
+
+            let foundGems = 0;
+            let multiplier = 1.0;
+            let gameOver = false;
+
+            function renderMiner() {
+                let html = '<div class="miner-grid">';
+                field.forEach((cell, idx) => {
+                    let display = cell.opened ? cell.icon : '⬛';
+                    html += <div class="miner-cell ${cell.opened ? 'opened' : ''}" onclick="clickMiner(${idx})">${display}</div>;
+                });
+                html += '</div>';
+                html += <p style="text-align:center;margin-top:10px;">💎 ${foundGems}/3 • Множитель: x${multiplier.toFixed(1)}</p>;
+                return html;
+            }
+
+            window.clickMiner = function(idx) {
+                if (gameOver) return;
+                const cell = field[idx];
+                if (cell.opened) return;
+                cell.opened = true;
+
+                if (cell.icon === '●') {
+                    gameOver = true;
+                    sendData('miner_result', { win: 0 });
+                    document.getElementById('gameContent').innerHTML = renderMiner() + '<p style="color:red;">💥 Ты взорвался!</p>';
+                } else if (cell.icon === '◆') {
+                    foundGems++;
+                    multiplier *= 2;
+                    if (foundGems === 3) {
+                        gameOver = true;
+                        const win = balance * multiplier;
+                        sendData('miner_result', { win: win });
+                        document.getElementById('gameContent').innerHTML = renderMiner() + <p style="color:#00ffc8;">💎💎💎 Ты выиграл ${win.toFixed(2)}$!</p>;
+                    } else {
+                        document.getElementById('gameContent').innerHTML = renderMiner();
+                    }
+                } else {
+                    document.getElementById('gameContent').innerHTML = renderMiner();
+                }
+            };
+
+            content.innerHTML = renderMiner();
+            gameActive = true;
+        }
+    }
+
+    // ===== КЭШАУТ ДЛЯ AVIATOR =====
+    function cashoutAviator() {
+        if (!gameActive) return;
+        const coefLabel = document.getElementById('coefLabel');
+        const coef = parseFloat(coefLabel.textContent);
+        const win = balance * coef;
+        clearInterval(window._aviatorInterval);
+        sendData('aviator_result', { win: win });
+        document.getElementById('gameContent').innerHTML = <p style="text-align:center;color:#00ffc8;">✅ Ты выиграл ${win.toFixed(2)}$!</p>;
+        gameActive = false;
+    }
+
+    // ===== КЭШАУТ ДЛЯ ROCKET =====
+    function cashoutRocket() {
+        if (!gameActive) return;
+        const coefLabel = document.getElementById('rocketCoef');
+        const coef = parseFloat(coefLabel.textContent);
+        const win = balance * coef;
+        clearInterval(window._rocketInterval);
+        sendData('rocket_result', { win: win });
+        document.getElementById('gameContent').innerHTML = <p style="text-align:center;color:#00ffc8;">✅ Ты выиграл ${win.toFixed(2)}$!</p>;
+        gameActive = false;
+    }
+
+    // ===== ИНИЦИАЛИЗАЦИЯ =====
+    if (window.Telegram && Telegram.WebApp) {
+[16.07.2026 21:12] ClownFr_: Telegram.WebApp.ready();
+        // Получение начальных данных от бота
+        Telegram.WebApp.onEvent('data', (data) => {
+            try {
+                const json = JSON.parse(data);
+                if (json.balance !== undefined) updateBalance(json.balance);
+            } catch (e) {}
+        });
+    }
+
+    // Симуляция получения баланса из бота (для локального теста)
+    setTimeout(() => updateBalance(100.0), 500);
+</script>
+</body>
+</html>
