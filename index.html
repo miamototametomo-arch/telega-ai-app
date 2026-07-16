@@ -261,12 +261,31 @@
     let tg = window.Telegram?.WebApp;
     let botBets = [];
 
+    // ===== РАБОТА С LOCALSTORAGE =====
+    function saveBalance() {
+        localStorage.setItem('casino_balance', balance.toString());
+    }
+
+    function loadBalance() {
+        const saved = localStorage.getItem('casino_balance');
+        if (saved !== null) {
+            balance = parseFloat(saved);
+        } else {
+            balance = 100; // Если нет сохранения — стартовый 100$
+        }
+        updateBalanceUI();
+    }
+
+    // ===== ОБНОВЛЕНИЕ UI =====
     function updateBalanceUI() {
         document.getElementById('balanceDisplay').textContent = `💰 ${balance.toFixed(2)}$`;
+        saveBalance(); // Автосохранение
     }
+
     function updateOnlineUI(count) {
         document.getElementById('onlineDisplay').textContent = `👥 ${count}`;
     }
+
     function updateBetUI() {
         document.querySelectorAll('.bet-btn').forEach(btn => {
             btn.classList.remove('selected');
@@ -276,6 +295,7 @@
         });
     }
 
+    // ===== ОТПРАВКА В БОТ =====
     function sendData(action, payload = {}) {
         const data = JSON.stringify({ action, ...payload });
         if (tg) {
@@ -290,6 +310,7 @@
         sendData('get_online');
     }
 
+    // ===== Telegram WebApp =====
     if (tg) {
         tg.ready();
         tg.onEvent('data', (data) => {
@@ -310,11 +331,11 @@
         });
         setTimeout(loadData, 300);
     } else {
-        balance = 100;
-        updateBalanceUI();
+        loadBalance(); // Если без бота — загружаем из localStorage
         updateOnlineUI(42);
     }
 
+    // ===== ГЕНЕРАЦИЯ БОТОВ =====
     function generateBotBets() {
         const names = ['Бот 1', 'Бот 2', 'Бот 3', 'Бот 4', 'Бот 5'];
         botBets = [];
@@ -342,6 +363,7 @@
 
     generateBotBets();
 
+    // ===== ВЫБОР ИГРЫ =====
     function selectGame(game) {
         if (cdActive) return;
         currentGame = game;
@@ -356,6 +378,7 @@
         generateBotBets();
     }
 
+    // ===== ВЫБОР СТАВКИ =====
     function selectBet(amount) {
         if (cdActive) return;
         currentBet = amount;
@@ -372,6 +395,7 @@
         }
     }
 
+    // ===== СТАРТ ИГРЫ =====
     function startGame() {
         if (currentBet > balance) {
             alert('❌ Недостаточно средств!');
@@ -416,6 +440,7 @@
         }, 1000);
     }
 
+    // ===== AVIATOR =====
     function startAviator(content) {
         gameActive = true;
         content.innerHTML = `
@@ -457,7 +482,6 @@
                 cashoutBtn.textContent = '💥 CRASH';
                 status.textContent = '💥 Проигрыш!';
                 sendData('aviator_result', { win: 0 });
-                // Бот выигрывает
                 const winner = Math.floor(Math.random() * 5);
                 updateBots(winner);
             }
@@ -479,6 +503,7 @@
         updateBots(winner);
     }
 
+    // ===== ROCKET =====
     function startRocket(content) {
         gameActive = true;
         content.innerHTML = `
@@ -530,103 +555,4 @@
         clearInterval(gameInterval);
         gameActive = false;
         document.getElementById('rocketCashout').disabled = true;
-        document.getElementById('rocketStatus').textContent = `✅ Выигрыш: ${win.toFixed(2)}$ (x${coef.toFixed(2)})`;
-        sendData('rocket_result', { win: win });
-        const winner = Math.floor(Math.random() * 5);
-        updateBots(winner);
-    }
-
-    function startMiner(content) {
-        let field = [];
-        let mines = new Set();
-        let gems = new Set();
-        while (mines.size < 5) mines.add(Math.floor(Math.random() * 25));
-        while (gems.size < 4) {
-            let pos = Math.floor(Math.random() * 25);
-            if (!mines.has(pos)) gems.add(pos);
-        }
-        for (let i = 0; i < 25; i++) {
-            let icon = '⬛';
-            if (mines.has(i)) icon = '💣';
-            else if (gems.has(i)) icon = '💎';
-            field.push({ icon, opened: false });
-        }
-
-        let foundGems = 0;
-        let multiplier = 1.0;
-        let gameOver = false;
-
-        function getMultiplier(count) {
-            if (count === 0) return 0;
-            if (count === 1) return 0.5;
-            if (count === 2) return 0.5;
-            if (count === 3) return 1.0;
-            if (count === 4) return 1.5;
-            return 0;
-        }
-
-        function renderMiner(showCashout) {
-            let html = '<div class="miner-grid">';
-            field.forEach((cell, idx) => {
-                let display = cell.opened ? cell.icon : '⬛';
-                html += `<div class="miner-cell ${cell.opened ? 'opened' : ''}" onclick="clickMiner(${idx})">${display}</div>`;
-            });
-            html += '</div>';
-            html += `<div class="status-text">💎 ${foundGems}/4 • Множитель: x${getMultiplier(foundGems)}</div>`;
-            if (showCashout && foundGems >= 2 && foundGems <= 3) {
-                html += `<button class="cashout-btn" onclick="cashoutMiner()">💰 ЗАБРАТЬ (x${getMultiplier(foundGems)})</button>`;
-            }
-            return html;
-        }
-
-        window.clickMiner = function(idx) {
-            if (gameOver) return;
-            const cell = field[idx];
-            if (cell.opened) return;
-            cell.opened = true;
-
-            if (cell.icon === '💣') {
-                gameOver = true;
-                gameActive = false;
-                sendData('miner_result', { win: 0 });
-                document.getElementById('gameContent').innerHTML = renderMiner(false) + '<div class="status-text" style="color:red;">💥 Ты взорвался!</div>';
-            } else if (cell.icon === '💎') {
-                foundGems++;
-                if (foundGems === 4) {
-                    gameOver = true;
-                    gameActive = false;
-                    const win = currentBet * 1.5;
-                    balance += win;
-                    updateBalanceUI();
-                    sendData('miner_result', { win: win });
-                    document.getElementById('gameContent').innerHTML = renderMiner(false) + `<div class="status-text" style="color:#ffd700;">💎💎💎💎 Ты выиграл ${win.toFixed(2)}$!</div>`;
-                } else {
-                    document.getElementById('gameContent').innerHTML = renderMiner(true);
-                }
-            } else {
-                document.getElementById('gameContent').innerHTML = renderMiner(true);
-            }
-        };
-
-        window.cashoutMiner = function() {
-            if (gameOver) return;
-            const mult = getMultiplier(foundGems);
-            const win = currentBet * mult;
-            balance += win;
-            updateBalanceUI();
-            gameOver = true;
-            gameActive = false;
-            sendData('miner_result', { win: win });
-            document.getElementById('gameContent').innerHTML = renderMiner(false) + `<div class="status-text" style="color:#ffd700;">✅ Ты забрал ${win.toFixed(2)}$!</div>`;
-        };
-
-        content.innerHTML = renderMiner(true);
-        gameActive = true;
-        generateBotBets();
-    }
-
-    balance = 100;
-    updateBalanceUI();
-</script>
-</body>
-</html>
+        document.getElementById('rocketStatus').textContent = `✅ Выигрыш: ${win.t
