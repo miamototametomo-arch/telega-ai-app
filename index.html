@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Casino WebApp</title>
+    <title>Casino</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -11,70 +11,90 @@
             background: #0d0d0d;
             color: #fff;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 12px;
         }
         .container {
             max-width: 400px;
             width: 100%;
             background: #1a1a1a;
-            border-radius: 24px;
+            border-radius: 28px;
             padding: 20px;
-            box-shadow: 0 0 30px rgba(0, 255, 200, 0.1);
         }
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
-        .balance {
-            font-size: 24px;
-            font-weight: bold;
-            color: #00ffc8;
-        }
-        .online {
-            font-size: 14px;
-            color: #888;
-        }
+        .balance { font-size: 28px; font-weight: bold; color: #00ffc8; }
+        .online { font-size: 16px; color: #888; }
         .menu-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            gap: 12px;
-            margin: 20px 0;
+            gap: 10px;
+            margin: 16px 0;
         }
         .menu-btn {
             background: #2a2a2a;
-            padding: 16px 0;
+            padding: 14px 0;
             border-radius: 16px;
             text-align: center;
             font-size: 14px;
-            cursor: pointer;
-            transition: 0.2s;
+            font-weight: bold;
             border: none;
             color: #fff;
+            cursor: pointer;
+            transition: 0.15s;
         }
-        .menu-btn:active { transform: scale(0.95); }
+        .menu-btn:active { transform: scale(0.92); }
         .menu-btn.green { background: #00c853; }
-        .menu-btn.red { background: #d50000; }
         .menu-btn.purple { background: #aa00ff; }
-
+        .menu-btn.orange { background: #ff6d00; }
+        .menu-btn.blue { background: #2979ff; }
         .game-area {
             background: #121212;
             border-radius: 20px;
-            padding: 20px;
-            margin-top: 20px;
-            min-height: 300px;
-            position: relative;
+            padding: 16px;
+            min-height: 240px;
+            margin-top: 12px;
         }
-
-        /* Aviator */
+        .cashout-btn {
+            width: 100%;
+            padding: 14px;
+            background: #00c853;
+            border: none;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+            margin-top: 12px;
+            cursor: pointer;
+        }
+        .cashout-btn:active { transform: scale(0.96); }
+        .miner-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+        }
+        .miner-cell {
+            aspect-ratio: 1;
+            background: #2a2a2a;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .miner-cell:active { transform: scale(0.88); }
+        .miner-cell.opened { background: #1a1a1a; cursor: default; }
         .graph {
             width: 100%;
-            height: 150px;
+            height: 120px;
             background: #0a0a0a;
             border-radius: 12px;
             position: relative;
@@ -91,158 +111,182 @@
         }
         .graph .label {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 24px;
+            top: 8px;
+            right: 12px;
+            font-size: 22px;
             font-weight: bold;
             color: #00ffc8;
         }
-
-        /* Miner */
-        .miner-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-        }
-        .miner-cell {
-            aspect-ratio: 1;
-            background: #2a2a2a;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .miner-cell:active { transform: scale(0.9); }
-        .miner-cell.opened { background: #1a1a1a; }
-
-        .cashout-btn {
-            width: 100%;
-            padding: 16px;
-            background: #00c853;
-            border: none;
-            border-radius: 16px;
-            font-size: 20px;
-            font-weight: bold;
-            color: #fff;
-            margin-top: 16px;
-            cursor: pointer;
-        }
-        .cashout-btn:active { transform: scale(0.96); }
-
-        .footer {
-            margin-top: 20px;
-            font-size: 12px;
-            color: #555;
-            text-align: center;
-        }
-
+        .footer { text-align: center; font-size: 12px; color: #555; margin-top: 16px; }
+        .status-text { text-align: center; margin-top: 10px; font-size: 14px; color: #888; }
         .hidden { display: none; }
     </style>
 </head>
 <body>
-[16.07.2026 21:12] ClownFr_: <div class="container" id="app">
-    <!-- Хедер -->
+<div class="container">
     <div class="header">
-        <div class="balance" id="balanceDisplay">💰 100.00$</div>
-        <div class="online" id="onlineDisplay">👥 389</div>
+        <div class="balance" id="balanceDisplay">💰 0.00$</div>
+        <div class="online" id="onlineDisplay">👥 0</div>
     </div>
 
-    <!-- Меню -->
     <div class="menu-grid">
         <button class="menu-btn green" onclick="openGame('aviator')">✈️ Aviator</button>
         <button class="menu-btn purple" onclick="openGame('rocket')">🚀 Rocket</button>
-        <button class="menu-btn" onclick="openGame('miner')">⛏️ Майнер</button>
-        <button class="menu-btn" onclick="sendData('deposit')">📥 Депозит</button>
-        <button class="menu-btn" onclick="sendData('withdraw')">📤 Вывод</button>
-        <button class="menu-btn" onclick="sendData('language')">🌐 Язык</button>
+        <button class="menu-btn orange" onclick="openGame('miner')">⛏️ Майнер</button>
+        <button class="menu-btn blue" onclick="openGame('deposit')">📥 Депозит</button>
+        <button class="menu-btn blue" onclick="openGame('withdraw')">📤 Вывод</button>
+        <button class="menu-btn" onclick="openGame('language')">🌐 Язык</button>
     </div>
 
-    <!-- Игровая область -->
     <div class="game-area" id="gameArea">
-        <div id="gameContent">
-            <p style="text-align:center;color:#888;">Выберите игру</p>
-        </div>
+        <div id="gameContent" style="text-align:center;color:#888;padding:20px;">👇 Выберите игру</div>
     </div>
 
     <div class="footer">Casino Bot • v3.29.1</div>
 </div>
 
 <script>
-    // ===== ДАННЫЕ =====
-    let balance = 100.0;
+    let balance = 0.0;
+    let gameInterval = null;
     let gameActive = false;
+    let tg = window.Telegram?.WebApp;
 
-    // ===== ОБНОВЛЕНИЕ БАЛАНСА =====
-    function updateBalance(newBalance) {
-        balance = newBalance;
-        document.getElementById('balanceDisplay').textContent = 💰 ${balance.toFixed(2)}$;
+    function updateBalanceUI() {
+        document.getElementById('balanceDisplay').textContent = `💰 ${balance.toFixed(2)}$`;
+    }
+    function updateOnlineUI(count) {
+        document.getElementById('onlineDisplay').textContent = `👥 ${count}`;
     }
 
-    // ===== ОТПРАВКА ДАННЫХ В БОТ =====
     function sendData(action, payload = {}) {
-        // Здесь вы отправляете данные через Telegram WebApp
-        if (window.Telegram && Telegram.WebApp) {
-            Telegram.WebApp.sendData(JSON.stringify({ action, ...payload }));
+        const data = JSON.stringify({ action, ...payload });
+        if (tg) {
+            tg.sendData(data);
         } else {
-            alert(Данные отправлены: ${action});
+            console.log('📤 Send:', data);
         }
     }
 
-    // ===== ОТКРЫТИЕ ИГРЫ =====
+    // Запрос баланса и онлайна
+    function loadData() {
+        sendData('get_balance');
+        sendData('get_online');
+    }
+
+    if (tg) {
+        tg.ready();
+        tg.onEvent('data', (data) => {
+            try {
+                const json = JSON.parse(data);
+                if (json.balance !== undefined) {
+                    balance = json.balance;
+                    updateBalanceUI();
+                }
+                if (json.win !== undefined) {
+                    balance += json.win;
+                    updateBalanceUI();
+                }
+                if (json.online !== undefined) {
+                    updateOnlineUI(json.online);
+                }
+            } catch (e) {}
+        });
+        setTimeout(loadData, 300);
+    } else {
+        balance = 100;
+        updateBalanceUI();
+        updateOnlineUI(42);
+    }
+
+    // ===== ОТКРЫТИЕ ИГР =====
     function openGame(game) {
         const content = document.getElementById('gameContent');
+        if (gameInterval) clearInterval(gameInterval);
         gameActive = false;
 
+        if (game === 'deposit') {
+            content.innerHTML = `
+                <p style="text-align:center;color:#aaa;">📥 Адрес USDT (BEP20):<br><code style="background:#222;padding:8px;border-radius:8px;display:block;margin:10px 0;">0x1234567890abcdef</code></p>
+                <button class="cashout-btn" onclick="sendData('deposit_sim')">💰 Пополнить 10$</button>
+            `;
+            return;
+        }
+        if (game === 'withdraw') {
+            content.innerHTML = `
+                <p style="text-align:center;color:#aaa;">📤 Минимальный вывод: 10$<br>Комиссия: 5%</p>
+                <button class="cashout-btn" onclick="sendData('withdraw_sim', {amount: 10})">💸 Вывести 10$</button>
+            `;
+            return;
+        }
+        if (game === 'language') {
+            content.innerHTML = `<p style="text-align:center;color:#aaa;">🌐 Язык: Русский 🇷🇺</p>`;
+            return;
+        }
+
+        // ===== AVIATOR (35% выигрыша) =====
         if (game === 'aviator') {
-            content.innerHTML = 
-                <div class="graph">
-                    <div class="line"></div>
-                    <div class="label" id="coefLabel">1.00x</div>
-                </div>
-                <button class="cashout-btn" id="cashoutBtn" onclick="cashoutAviator()">💰 Кэшаут</button>
-                <p style="text-align:center;color:#888;margin-top:8px;">Самолёт летит...</p>
-            ;
-            // Имитация полёта
+            content.innerHTML = `
+                <div class="graph"><div class="line"></div><div class="label" id="aviatorCoef">1.00x</div></div>
+                <button class="cashout-btn" id="aviatorCashout" onclick="cashoutAviator()">💰 Кэшаут</button>
+                <div class="status-text" id="aviatorStatus">Летит...</div>
+            `;
             let coef = 1.0;
-            const coefLabel = document.getElementById('coefLabel');
-            const interval = setInterval(() => {
-                coef += 0.02 + Math.random() * 0.05;
+            gameActive = true;
+            const coefLabel = document.getElementById('aviatorCoef');
+            const status = document.getElementById('aviatorStatus');
+            const cashoutBtn = document.getElementById('aviatorCashout');
+
+            gameInterval = setInterval(() => {
+                if (!gameActive) return;
+                coef += 0.03 + Math.random() * 0.07;
                 coefLabel.textContent = coef.toFixed(2) + 'x';
-                if (coef > 5.0 || Math.random() < 0.01) {
-                    clearInterval(interval);
-                    coefLabel.textContent = '💥 CRASH';
-                    document.getElementById('cashoutBtn').style.display = 'none';
+                // Шанс краша 65% (значит выигрыш 35%)
+                if (Math.random() < 0.017 || coef > 6.0) {
+                    clearInterval(gameInterval);
+                    gameActive = false;
+                    cashoutBtn.style.display = 'none';
+                    status.textContent = '💥 CRASH! Баланс обнулён.';
+                    balance = 0;
+                    updateBalanceUI();
                     sendData('aviator_result', { win: 0 });
                 }
-            }, 100);
-            window._aviatorInterval = interval;
-            gameActive = true;
+            }, 80);
+            return;
+        }
 
-        } else if (game === 'rocket') {
-            content.innerHTML = 
-                <div style="text-align:center;font-size:48px;">🚀</div>
-                <div style="text-align:center;font-size:32px;margin:16px 0;" id="rocketCoef">1.00x</div>
+        // ===== ROCKET (35% выигрыша) =====
+        if (game === 'rocket') {
+            content.innerHTML = `
+                <div style="text-align:center;font-size:56px;">🚀</div>
+                <div style="text-align:center;font-size:32px;font-weight:bold;margin:12px 0;color:#00ffc8;" id="rocketCoef">1.00x</div>
                 <button class="cashout-btn" id="rocketCashout" onclick="cashoutRocket()">💰 Кэшаут</button>
-            ;
+                <div class="status-text" id="rocketStatus">Взлетает...</div>
+            `;
             let coef = 1.0;
+            gameActive = true;
             const coefLabel = document.getElementById('rocketCoef');
-            const interval = setInterval(() => {
-                coef += 0.05 + Math.random() * 0.08;
+            const status = document.getElementById('rocketStatus');
+            const cashoutBtn = document.getElementById('rocketCashout');
+
+            gameInterval = setInterval(() => {
+                if (!gameActive) return;
+                coef += 0.05 + Math.random() * 0.09;
                 coefLabel.textContent = coef.toFixed(2) + 'x';
-                if (coef > 10.0 || Math.random() < 0.008) {
-                    clearInterval(interval);
-                    coefLabel.textContent = '💥 EXPLODED';
-                    document.getElementById('rocketCashout').style.display = 'none';
+                if (Math.random() < 0.015 || coef > 10.0) {
+                    clearInterval(gameInterval);
+                    gameActive = false;
+                    cashoutBtn.style.display = 'none';
+                    status.textContent = '💥 EXPLODED! Баланс обнулён.';
+                    balance = 0;
+                    updateBalanceUI();
                     sendData('rocket_result', { win: 0 });
                 }
-            }, 100);
-            window._rocketInterval = interval;
-            gameActive = true;
-[16.07.2026 21:12] ClownFr_: } else if (game === 'miner') {
-            // Генерируем поле 5x5
+            }, 80);
+            return;
+        }
+
+        // ===== MINER (35% выигрыша) =====
+        if (game === 'miner') {
             let field = [];
             let mines = new Set();
             let gems = new Set();
@@ -253,8 +297,8 @@
             }
             for (let i = 0; i < 25; i++) {
                 let icon = '⬛';
-                if (mines.has(i)) icon = '●';
-                else if (gems.has(i)) icon = '◆';
+                if (mines.has(i)) icon = '💣';
+                else if (gems.has(i)) icon = '💎';
                 field.push({ icon, opened: false });
             }
 
@@ -266,10 +310,10 @@
                 let html = '<div class="miner-grid">';
                 field.forEach((cell, idx) => {
                     let display = cell.opened ? cell.icon : '⬛';
-                    html += <div class="miner-cell ${cell.opened ? 'opened' : ''}" onclick="clickMiner(${idx})">${display}</div>;
+                    html += `<div class="miner-cell ${cell.opened ? 'opened' : ''}" onclick="clickMiner(${idx})">${display}</div>`;
                 });
                 html += '</div>';
-                html += <p style="text-align:center;margin-top:10px;">💎 ${foundGems}/3 • Множитель: x${multiplier.toFixed(1)}</p>;
+                html += `<div class="status-text">💎 ${foundGems}/3 • Множитель: x${multiplier.toFixed(1)}</div>`;
                 return html;
             }
 
@@ -279,18 +323,24 @@
                 if (cell.opened) return;
                 cell.opened = true;
 
-                if (cell.icon === '●') {
+                if (cell.icon === '💣') {
                     gameOver = true;
+                    gameActive = false;
+                    balance = 0;
+                    updateBalanceUI();
                     sendData('miner_result', { win: 0 });
-                    document.getElementById('gameContent').innerHTML = renderMiner() + '<p style="color:red;">💥 Ты взорвался!</p>';
-                } else if (cell.icon === '◆') {
+                    document.getElementById('gameContent').innerHTML = renderMiner() + '<div class="status-text" style="color:red;">💥 Ты взорвался!</div>';
+                } else if (cell.icon === '💎') {
                     foundGems++;
                     multiplier *= 2;
                     if (foundGems === 3) {
                         gameOver = true;
+                        gameActive = false;
                         const win = balance * multiplier;
+                        balance = win;
+                        updateBalanceUI();
                         sendData('miner_result', { win: win });
-                        document.getElementById('gameContent').innerHTML = renderMiner() + <p style="color:#00ffc8;">💎💎💎 Ты выиграл ${win.toFixed(2)}$!</p>;
+                        document.getElementById('gameContent').innerHTML = renderMiner() + `<div class="status-text" style="color:#00ffc8;">💎💎💎 Ты выиграл ${win.toFixed(2)}$!</div>`;
                     } else {
                         document.getElementById('gameContent').innerHTML = renderMiner();
                     }
@@ -301,47 +351,40 @@
 
             content.innerHTML = renderMiner();
             gameActive = true;
+            return;
         }
     }
 
-    // ===== КЭШАУТ ДЛЯ AVIATOR =====
+    // ===== КЭШАУТ =====
     function cashoutAviator() {
         if (!gameActive) return;
-        const coefLabel = document.getElementById('coefLabel');
-        const coef = parseFloat(coefLabel.textContent);
+        const coef = parseFloat(document.getElementById('aviatorCoef').textContent);
         const win = balance * coef;
-        clearInterval(window._aviatorInterval);
-        sendData('aviator_result', { win: win });
-        document.getElementById('gameContent').innerHTML = <p style="text-align:center;color:#00ffc8;">✅ Ты выиграл ${win.toFixed(2)}$!</p>;
+        balance = win;
+        updateBalanceUI();
+        clearInterval(gameInterval);
         gameActive = false;
+        document.getElementById('aviatorCashout').style.display = 'none';
+        document.getElementById('aviatorStatus').textContent = `✅ Выигрыш: ${win.toFixed(2)}$`;
+        sendData('aviator_result', { win: win });
     }
 
-    // ===== КЭШАУТ ДЛЯ ROCKET =====
     function cashoutRocket() {
         if (!gameActive) return;
-        const coefLabel = document.getElementById('rocketCoef');
-        const coef = parseFloat(coefLabel.textContent);
+        const coef = parseFloat(document.getElementById('rocketCoef').textContent);
         const win = balance * coef;
-        clearInterval(window._rocketInterval);
-        sendData('rocket_result', { win: win });
-        document.getElementById('gameContent').innerHTML = <p style="text-align:center;color:#00ffc8;">✅ Ты выиграл ${win.toFixed(2)}$!</p>;
+        balance = win;
+        updateBalanceUI();
+        clearInterval(gameInterval);
         gameActive = false;
+        document.getElementById('rocketCashout').style.display = 'none';
+        document.getElementById('rocketStatus').textContent = `✅ Выигрыш: ${win.toFixed(2)}$`;
+        sendData('rocket_result', { win: win });
     }
 
-    // ===== ИНИЦИАЛИЗАЦИЯ =====
-    if (window.Telegram && Telegram.WebApp) {
-[16.07.2026 21:12] ClownFr_: Telegram.WebApp.ready();
-        // Получение начальных данных от бота
-        Telegram.WebApp.onEvent('data', (data) => {
-            try {
-                const json = JSON.parse(data);
-                if (json.balance !== undefined) updateBalance(json.balance);
-            } catch (e) {}
-        });
-    }
-
-    // Симуляция получения баланса из бота (для локального теста)
-    setTimeout(() => updateBalance(100.0), 500);
+    // Стартовый баланс 100$
+    balance = 100;
+    updateBalanceUI();
 </script>
 </body>
 </html>
