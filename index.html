@@ -8,7 +8,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', sans-serif;
-            background: #0a0a0f;
+            background: #0a0a12;
             color: #fff;
             display: flex;
             justify-content: center;
@@ -17,38 +17,39 @@
             padding: 12px;
         }
         .container {
-            max-width: 400px;
+            max-width: 420px;
             width: 100%;
-            background: #12121a;
+            background: #12121c;
             border-radius: 28px;
             padding: 20px;
-            border: 1px solid #2a2a3a;
-            box-shadow: 0 0 50px rgba(255, 215, 0, 0.05);
+            border: 1px solid #1f1f30;
+            box-shadow: 0 0 60px rgba(255, 215, 0, 0.06);
         }
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
             background: #1a1a2a;
-            padding: 12px 16px;
+            padding: 14px 18px;
             border-radius: 16px;
+            margin-bottom: 16px;
         }
         .balance {
             font-size: 24px;
-            font-weight: bold;
+            font-weight: 700;
             color: #ffd700;
+            letter-spacing: 0.5px;
         }
         .online {
             font-size: 14px;
             color: #888;
-            background: #0a0a12;
-            padding: 4px 12px;
-            border-radius: 20px;
+            background: #0a0a14;
+            padding: 4px 14px;
+            border-radius: 30px;
         }
         .game-selector {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             margin: 16px 0;
             background: #1a1a2a;
             padding: 6px;
@@ -56,19 +57,19 @@
         }
         .game-btn {
             flex: 1;
-            padding: 10px 0;
+            padding: 12px 0;
             background: transparent;
             border: none;
             color: #888;
             font-size: 14px;
-            font-weight: bold;
+            font-weight: 700;
             cursor: pointer;
             border-radius: 12px;
             transition: 0.3s;
         }
         .game-btn.active {
             background: #ffd700;
-            color: #0a0a0f;
+            color: #0a0a12;
         }
         .game-btn:active { transform: scale(0.95); }
 
@@ -81,7 +82,9 @@
         .bet-label {
             color: #aaa;
             font-size: 12px;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         .bet-grid {
             display: grid;
@@ -90,36 +93,58 @@
         }
         .bet-btn {
             padding: 10px 0;
-            background: #2a2a3a;
+            background: #2a2a3e;
             border: none;
             border-radius: 12px;
             color: #fff;
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 700;
             cursor: pointer;
             transition: 0.2s;
         }
         .bet-btn:active { transform: scale(0.92); }
         .bet-btn.selected {
             background: #ffd700;
-            color: #0a0a0f;
+            color: #0a0a12;
         }
         .bet-btn.custom {
-            background: #3a3a4a;
+            background: #3a3a4e;
+            font-size: 20px;
         }
 
         .game-area {
-            background: #12121a;
+            background: #12121c;
             border-radius: 20px;
             padding: 16px;
-            min-height: 280px;
+            min-height: 300px;
             margin-top: 12px;
             border: 1px solid #1a1a2a;
+            position: relative;
         }
         .game-content {
             text-align: center;
             color: #888;
             padding: 20px 0;
+        }
+
+        .start-btn {
+            width: 100%;
+            padding: 16px;
+            background: #ffd700;
+            border: none;
+            border-radius: 16px;
+            font-size: 20px;
+            font-weight: 700;
+            color: #0a0a12;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 12px;
+        }
+        .start-btn:active { transform: scale(0.96); }
+        .start-btn:disabled {
+            background: #444;
+            color: #888;
+            cursor: not-allowed;
         }
 
         .cashout-btn {
@@ -129,8 +154,8 @@
             border: none;
             border-radius: 16px;
             font-size: 18px;
-            font-weight: bold;
-            color: #0a0a0f;
+            font-weight: 700;
+            color: #0a0a12;
             margin-top: 12px;
             cursor: pointer;
             transition: 0.2s;
@@ -146,30 +171,31 @@
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 6px;
+            margin: 12px 0;
         }
         .miner-cell {
             aspect-ratio: 1;
-            background: #2a2a3a;
-            border-radius: 8px;
+            background: #2a2a3e;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 28px;
             cursor: pointer;
             user-select: none;
-            transition: 0.2s;
+            transition: 0.15s;
         }
         .miner-cell:active { transform: scale(0.88); }
         .miner-cell.opened { background: #1a1a2a; cursor: default; }
 
         .graph {
             width: 100%;
-            height: 140px;
-            background: #0a0a12;
-            border-radius: 12px;
+            height: 160px;
+            background: #0a0a14;
+            border-radius: 16px;
             position: relative;
             overflow: hidden;
-            border: 1px solid #1a1a2a;
+            border: 1px solid #1f1f30;
         }
         .graph .line {
             position: absolute;
@@ -182,55 +208,57 @@
         }
         .graph .label {
             position: absolute;
-            top: 8px;
-            right: 12px;
-            font-size: 28px;
-            font-weight: bold;
+            top: 10px;
+            right: 14px;
+            font-size: 32px;
+            font-weight: 700;
             color: #ffd700;
         }
-        .cd-overlay {
+        .graph .cd-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.75);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 48px;
-            font-weight: bold;
+            font-size: 56px;
+            font-weight: 700;
             color: #ffd700;
-            border-radius: 12px;
+            border-radius: 16px;
         }
         .status-text {
             text-align: center;
-            margin-top: 10px;
-            font-size: 14px;
+            margin-top: 12px;
+            font-size: 15px;
             color: #aaa;
         }
-        .footer {
-            text-align: center;
-            font-size: 11px;
-            color: #333;
-            margin-top: 16px;
-        }
         .multiplier-display {
-            font-size: 20px;
+            font-size: 24px;
             color: #ffd700;
             margin: 8px 0;
+            font-weight: 700;
         }
         .win-chance {
             font-size: 12px;
             color: #666;
-            margin-top: 4px;
+            margin-top: 6px;
+        }
+        .footer {
+            text-align: center;
+            font-size: 11px;
+            color: #2a2a3a;
+            margin-top: 16px;
         }
         .game-title {
             font-size: 18px;
-            font-weight: bold;
+            font-weight: 700;
             color: #ffd700;
             margin-bottom: 8px;
         }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
@@ -240,14 +268,12 @@
         <div class="online" id="onlineDisplay">👥 0</div>
     </div>
 
-    <!-- Выбор игры стрелками -->
     <div class="game-selector">
         <button class="game-btn active" id="gameAviator" onclick="selectGame('aviator')">✈️ Aviator</button>
         <button class="game-btn" id="gameRocket" onclick="selectGame('rocket')">🚀 Rocket</button>
         <button class="game-btn" id="gameMiner" onclick="selectGame('miner')">⛏️ Майнер</button>
     </div>
 
-    <!-- СТАВКИ -->
     <div class="bet-section">
         <div class="bet-label">Сумма ставки</div>
         <div class="bet-grid">
@@ -260,9 +286,10 @@
         </div>
     </div>
 
-    <div class="game-area">
+    <div class="game-area" id="gameArea">
         <div id="gameContent">
-            <div class="game-content">👇 Выберите игру и сделайте ставку</div>
+            <div class="game-content">👇 Выберите игру<br>и сделайте ставку</div>
+            <button class="start-btn" id="startBtn" onclick="startGame()">🚀 СТАРТ</button>
         </div>
     </div>
 
@@ -278,7 +305,6 @@
     let cdActive = false;
     let tg = window.Telegram?.WebApp;
 
-    // ===== ОБНОВЛЕНИЕ UI =====
     function updateBalanceUI() {
         document.getElementById('balanceDisplay').textContent = `💰 ${balance.toFixed(2)}$`;
     }
@@ -294,7 +320,6 @@
         });
     }
 
-    // ===== ОТПРАВКА В БОТ =====
     function sendData(action, payload = {}) {
         const data = JSON.stringify({ action, ...payload });
         if (tg) {
@@ -309,7 +334,6 @@
         sendData('get_online');
     }
 
-    // ===== Telegram WebApp =====
     if (tg) {
         tg.ready();
         tg.onEvent('data', (data) => {
@@ -335,25 +359,28 @@
         updateOnlineUI(42);
     }
 
-    // ===== ВЫБОР ИГРЫ =====
     function selectGame(game) {
+        if (cdActive) return;
         currentGame = game;
         document.querySelectorAll('.game-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('game' + game.charAt(0).toUpperCase() + game.slice(1)).classList.add('active');
         if (gameInterval) clearInterval(gameInterval);
         gameActive = false;
-        cdActive = false;
-        document.getElementById('gameContent').innerHTML = `<div class="game-content">✅ Выбрана игра: ${game === 'aviator' ? 'Aviator' : game === 'rocket' ? 'Rocket' : 'Майнер'}\nСделайте ставку и нажмите «Старт»</div>`;
+        document.getElementById('gameContent').innerHTML = `
+            <div class="game-content">✅ ${game === 'aviator' ? 'Aviator' : game === 'rocket' ? 'Rocket' : 'Майнер'}</div>
+            <button class="start-btn" onclick="startGame()">🚀 СТАРТ</button>
+        `;
     }
 
-    // ===== ВЫБОР СТАВКИ =====
     function selectBet(amount) {
+        if (cdActive) return;
         currentBet = amount;
         updateBetUI();
     }
 
     function customBet() {
-        const amount = prompt('Введите сумму ставки (1-1000$):', '10');
+        if (cdActive) return;
+        const amount = prompt('Введите сумму (1-1000$):', '10');
         if (amount && !isNaN(amount) && amount > 0 && amount <= 1000) {
             currentBet = parseFloat(amount);
             updateBetUI();
@@ -361,7 +388,6 @@
         }
     }
 
-    // ===== ЗАПУСК ИГРЫ =====
     function startGame() {
         if (currentBet > balance) {
             alert('❌ Недостаточно средств!');
@@ -372,20 +398,22 @@
         const content = document.getElementById('gameContent');
 
         if (currentGame === 'miner') {
-            // Майнер — без КД, сразу
+            balance -= currentBet;
+            updateBalanceUI();
             startMiner(content);
             return;
         }
 
-        // Aviator и Rocket — КД 10 секунд
+        // КД 10 секунд для Aviator и Rocket
         cdActive = true;
         let cd = 10;
         content.innerHTML = `
             <div class="game-content">
-                <div style="font-size:48px;">${currentGame === 'aviator' ? '✈️' : '🚀'}</div>
-                <div style="font-size:24px;color:#ffd700;margin:12px 0;">${currentGame === 'aviator' ? 'Aviator' : 'Rocket'}</div>
-                <div style="font-size:32px;font-weight:bold;color:#ffd700;" id="cdTimer">${cd}</div>
+                <div style="font-size:56px;">${currentGame === 'aviator' ? '✈️' : '🚀'}</div>
+                <div style="font-size:22px;color:#ffd700;margin:8px 0;">${currentGame === 'aviator' ? 'Aviator' : 'Rocket'}</div>
+                <div style="font-size:48px;font-weight:700;color:#ffd700;" id="cdTimer">${cd}</div>
                 <div style="color:#888;">Старт через...</div>
+                <div style="font-size:12px;color:#666;margin-top:4px;">Ставка: ${currentBet}$</div>
             </div>
         `;
 
@@ -396,7 +424,6 @@
             if (cd <= 0) {
                 clearInterval(timer);
                 cdActive = false;
-                // Списываем ставку
                 balance -= currentBet;
                 updateBalanceUI();
                 if (currentGame === 'aviator') startAviator(content);
@@ -405,14 +432,12 @@
         }, 1000);
     }
 
-    // ===== AVIATOR =====
     function startAviator(content) {
         gameActive = true;
         content.innerHTML = `
             <div class="graph">
                 <div class="line"></div>
                 <div class="label" id="aviatorCoef">1.00x</div>
-                <div id="cdOverlay" style="display:none;"></div>
             </div>
             <div class="multiplier-display" id="aviatorMultiplier">x1.00</div>
             <button class="cashout-btn" id="aviatorCashout" onclick="cashoutAviator()">💰 ЗАБРАТЬ</button>
@@ -432,16 +457,15 @@
             coefLabel.textContent = coef.toFixed(2) + 'x';
             multLabel.textContent = 'x' + coef.toFixed(2);
 
-            // Определяем выигрыш по шансам
             const roll = Math.random();
             let crash = false;
-            if (roll < 0.35) { // 35% — x2.25
+            if (roll < 0.35) {
                 if (coef >= 2.25) crash = true;
-            } else if (roll < 0.55) { // 20% — x3.00
+            } else if (roll < 0.55) {
                 if (coef >= 3.00) crash = true;
-            } else if (roll < 0.60) { // 5% — x3.5
+            } else if (roll < 0.60) {
                 if (coef >= 3.50) crash = true;
-            } else { // 40% — проигрыш (краш до 1.5)
+            } else {
                 if (coef >= 1.5 + Math.random() * 0.5) crash = true;
             }
 
@@ -469,12 +493,11 @@
         sendData('aviator_result', { win: win });
     }
 
-    // ===== ROCKET =====
     function startRocket(content) {
         gameActive = true;
         content.innerHTML = `
             <div style="text-align:center;font-size:64px;">🚀</div>
-            <div style="text-align:center;font-size:32px;font-weight:bold;margin:12px 0;color:#ffd700;" id="rocketCoef">1.00x</div>
+            <div style="text-align:center;font-size:32px;font-weight:700;margin:12px 0;color:#ffd700;" id="rocketCoef">1.00x</div>
             <button class="cashout-btn" id="rocketCashout" onclick="cashoutRocket()">💰 ЗАБРАТЬ</button>
             <div class="status-text" id="rocketStatus">Взлетает...</div>
             <div class="win-chance">Шансы: 35% x2.25 | 20% x3.00 | 5% x3.5</div>
@@ -526,11 +549,7 @@
         sendData('rocket_result', { win: win });
     }
 
-    // ===== MINER (без КД) =====
     function startMiner(content) {
-        balance -= currentBet;
-        updateBalanceUI();
-
         let field = [];
         let mines = new Set();
         let gems = new Set();
@@ -592,4 +611,12 @@
             }
         };
 
-        content.innerHTML =
+        content.innerHTML = renderMiner();
+        gameActive = true;
+    }
+
+    balance = 100;
+    updateBalanceUI();
+</script>
+</body>
+</html>
