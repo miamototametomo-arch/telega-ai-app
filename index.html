@@ -8,7 +8,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', sans-serif;
-            background: #0d0d0d;
+            background: #0a0a0f;
             color: #fff;
             display: flex;
             justify-content: center;
@@ -19,61 +19,129 @@
         .container {
             max-width: 400px;
             width: 100%;
-            background: #1a1a1a;
+            background: #12121a;
             border-radius: 28px;
             padding: 20px;
+            border: 1px solid #2a2a3a;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.05);
         }
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 16px;
-        }
-        .balance { font-size: 28px; font-weight: bold; color: #00ffc8; }
-        .online { font-size: 16px; color: #888; }
-        .menu-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 10px;
-            margin: 16px 0;
-        }
-        .menu-btn {
-            background: #2a2a2a;
-            padding: 14px 0;
+            background: #1a1a2a;
+            padding: 12px 16px;
             border-radius: 16px;
-            text-align: center;
+        }
+        .balance {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffd700;
+        }
+        .online {
+            font-size: 14px;
+            color: #888;
+            background: #0a0a12;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+        .game-selector {
+            display: flex;
+            gap: 8px;
+            margin: 16px 0;
+            background: #1a1a2a;
+            padding: 6px;
+            border-radius: 16px;
+        }
+        .game-btn {
+            flex: 1;
+            padding: 10px 0;
+            background: transparent;
+            border: none;
+            color: #888;
             font-size: 14px;
             font-weight: bold;
-            border: none;
-            color: #fff;
             cursor: pointer;
-            transition: 0.15s;
+            border-radius: 12px;
+            transition: 0.3s;
         }
-        .menu-btn:active { transform: scale(0.92); }
-        .menu-btn.green { background: #00c853; }
-        .menu-btn.purple { background: #aa00ff; }
-        .menu-btn.orange { background: #ff6d00; }
-        .menu-btn.blue { background: #2979ff; }
+        .game-btn.active {
+            background: #ffd700;
+            color: #0a0a0f;
+        }
+        .game-btn:active { transform: scale(0.95); }
+
+        .bet-section {
+            background: #1a1a2a;
+            padding: 16px;
+            border-radius: 16px;
+            margin: 12px 0;
+        }
+        .bet-label {
+            color: #aaa;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+        .bet-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+        }
+        .bet-btn {
+            padding: 10px 0;
+            background: #2a2a3a;
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .bet-btn:active { transform: scale(0.92); }
+        .bet-btn.selected {
+            background: #ffd700;
+            color: #0a0a0f;
+        }
+        .bet-btn.custom {
+            background: #3a3a4a;
+        }
+
         .game-area {
-            background: #121212;
+            background: #12121a;
             border-radius: 20px;
             padding: 16px;
-            min-height: 240px;
+            min-height: 280px;
             margin-top: 12px;
+            border: 1px solid #1a1a2a;
         }
+        .game-content {
+            text-align: center;
+            color: #888;
+            padding: 20px 0;
+        }
+
         .cashout-btn {
             width: 100%;
             padding: 14px;
-            background: #00c853;
+            background: #ffd700;
             border: none;
             border-radius: 16px;
             font-size: 18px;
             font-weight: bold;
-            color: #fff;
+            color: #0a0a0f;
             margin-top: 12px;
             cursor: pointer;
+            transition: 0.2s;
         }
         .cashout-btn:active { transform: scale(0.96); }
+        .cashout-btn:disabled {
+            background: #444;
+            color: #888;
+            cursor: not-allowed;
+        }
+
         .miner-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -81,7 +149,7 @@
         }
         .miner-cell {
             aspect-ratio: 1;
-            background: #2a2a2a;
+            background: #2a2a3a;
             border-radius: 8px;
             display: flex;
             align-items: center;
@@ -89,16 +157,19 @@
             font-size: 24px;
             cursor: pointer;
             user-select: none;
+            transition: 0.2s;
         }
         .miner-cell:active { transform: scale(0.88); }
-        .miner-cell.opened { background: #1a1a1a; cursor: default; }
+        .miner-cell.opened { background: #1a1a2a; cursor: default; }
+
         .graph {
             width: 100%;
-            height: 120px;
-            background: #0a0a0a;
+            height: 140px;
+            background: #0a0a12;
             border-radius: 12px;
             position: relative;
             overflow: hidden;
+            border: 1px solid #1a1a2a;
         }
         .graph .line {
             position: absolute;
@@ -106,20 +177,60 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(0deg, #00ffc8 0%, transparent 80%);
+            background: linear-gradient(0deg, #ffd700 0%, transparent 70%);
             clip-path: polygon(0% 100%, 0% 80%, 20% 60%, 40% 40%, 60% 30%, 80% 10%, 100% 0%, 100% 100%);
         }
         .graph .label {
             position: absolute;
             top: 8px;
             right: 12px;
-            font-size: 22px;
+            font-size: 28px;
             font-weight: bold;
-            color: #00ffc8;
+            color: #ffd700;
         }
-        .footer { text-align: center; font-size: 12px; color: #555; margin-top: 16px; }
-        .status-text { text-align: center; margin-top: 10px; font-size: 14px; color: #888; }
-        .hidden { display: none; }
+        .cd-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: bold;
+            color: #ffd700;
+            border-radius: 12px;
+        }
+        .status-text {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #aaa;
+        }
+        .footer {
+            text-align: center;
+            font-size: 11px;
+            color: #333;
+            margin-top: 16px;
+        }
+        .multiplier-display {
+            font-size: 20px;
+            color: #ffd700;
+            margin: 8px 0;
+        }
+        .win-chance {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+        .game-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 8px;
+        }
     </style>
 </head>
 <body>
@@ -129,35 +240,61 @@
         <div class="online" id="onlineDisplay">👥 0</div>
     </div>
 
-    <div class="menu-grid">
-        <button class="menu-btn green" onclick="openGame('aviator')">✈️ Aviator</button>
-        <button class="menu-btn purple" onclick="openGame('rocket')">🚀 Rocket</button>
-        <button class="menu-btn orange" onclick="openGame('miner')">⛏️ Майнер</button>
-        <button class="menu-btn blue" onclick="openGame('deposit')">📥 Депозит</button>
-        <button class="menu-btn blue" onclick="openGame('withdraw')">📤 Вывод</button>
-        <button class="menu-btn" onclick="openGame('language')">🌐 Язык</button>
+    <!-- Выбор игры стрелками -->
+    <div class="game-selector">
+        <button class="game-btn active" id="gameAviator" onclick="selectGame('aviator')">✈️ Aviator</button>
+        <button class="game-btn" id="gameRocket" onclick="selectGame('rocket')">🚀 Rocket</button>
+        <button class="game-btn" id="gameMiner" onclick="selectGame('miner')">⛏️ Майнер</button>
     </div>
 
-    <div class="game-area" id="gameArea">
-        <div id="gameContent" style="text-align:center;color:#888;padding:20px;">👇 Выберите игру</div>
+    <!-- СТАВКИ -->
+    <div class="bet-section">
+        <div class="bet-label">Сумма ставки</div>
+        <div class="bet-grid">
+            <button class="bet-btn" onclick="selectBet(1)">1$</button>
+            <button class="bet-btn" onclick="selectBet(5)">5$</button>
+            <button class="bet-btn selected" onclick="selectBet(10)">10$</button>
+            <button class="bet-btn" onclick="selectBet(25)">25$</button>
+            <button class="bet-btn" onclick="selectBet(50)">50$</button>
+            <button class="bet-btn custom" onclick="customBet()">⚡</button>
+        </div>
     </div>
 
-    <div class="footer">Casino Bot • v3.29.1</div>
+    <div class="game-area">
+        <div id="gameContent">
+            <div class="game-content">👇 Выберите игру и сделайте ставку</div>
+        </div>
+    </div>
+
+    <div class="footer">Casino • v3.29.1</div>
 </div>
 
 <script>
     let balance = 0.0;
+    let currentGame = 'aviator';
+    let currentBet = 10;
     let gameInterval = null;
     let gameActive = false;
+    let cdActive = false;
     let tg = window.Telegram?.WebApp;
 
+    // ===== ОБНОВЛЕНИЕ UI =====
     function updateBalanceUI() {
         document.getElementById('balanceDisplay').textContent = `💰 ${balance.toFixed(2)}$`;
     }
     function updateOnlineUI(count) {
         document.getElementById('onlineDisplay').textContent = `👥 ${count}`;
     }
+    function updateBetUI() {
+        document.querySelectorAll('.bet-btn').forEach(btn => {
+            btn.classList.remove('selected');
+            if (btn.textContent.includes(currentBet + '$')) {
+                btn.classList.add('selected');
+            }
+        });
+    }
 
+    // ===== ОТПРАВКА В БОТ =====
     function sendData(action, payload = {}) {
         const data = JSON.stringify({ action, ...payload });
         if (tg) {
@@ -167,12 +304,12 @@
         }
     }
 
-    // Запрос баланса и онлайна
     function loadData() {
         sendData('get_balance');
         sendData('get_online');
     }
 
+    // ===== Telegram WebApp =====
     if (tg) {
         tg.ready();
         tg.onEvent('data', (data) => {
@@ -198,193 +335,261 @@
         updateOnlineUI(42);
     }
 
-    // ===== ОТКРЫТИЕ ИГР =====
-    function openGame(game) {
-        const content = document.getElementById('gameContent');
+    // ===== ВЫБОР ИГРЫ =====
+    function selectGame(game) {
+        currentGame = game;
+        document.querySelectorAll('.game-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('game' + game.charAt(0).toUpperCase() + game.slice(1)).classList.add('active');
         if (gameInterval) clearInterval(gameInterval);
         gameActive = false;
+        cdActive = false;
+        document.getElementById('gameContent').innerHTML = `<div class="game-content">✅ Выбрана игра: ${game === 'aviator' ? 'Aviator' : game === 'rocket' ? 'Rocket' : 'Майнер'}\nСделайте ставку и нажмите «Старт»</div>`;
+    }
 
-        if (game === 'deposit') {
-            content.innerHTML = `
-                <p style="text-align:center;color:#aaa;">📥 Адрес USDT (BEP20):<br><code style="background:#222;padding:8px;border-radius:8px;display:block;margin:10px 0;">0x1234567890abcdef</code></p>
-                <button class="cashout-btn" onclick="sendData('deposit_sim')">💰 Пополнить 10$</button>
-            `;
-            return;
-        }
-        if (game === 'withdraw') {
-            content.innerHTML = `
-                <p style="text-align:center;color:#aaa;">📤 Минимальный вывод: 10$<br>Комиссия: 5%</p>
-                <button class="cashout-btn" onclick="sendData('withdraw_sim', {amount: 10})">💸 Вывести 10$</button>
-            `;
-            return;
-        }
-        if (game === 'language') {
-            content.innerHTML = `<p style="text-align:center;color:#aaa;">🌐 Язык: Русский 🇷🇺</p>`;
-            return;
-        }
+    // ===== ВЫБОР СТАВКИ =====
+    function selectBet(amount) {
+        currentBet = amount;
+        updateBetUI();
+    }
 
-        // ===== AVIATOR (35% выигрыша) =====
-        if (game === 'aviator') {
-            content.innerHTML = `
-                <div class="graph"><div class="line"></div><div class="label" id="aviatorCoef">1.00x</div></div>
-                <button class="cashout-btn" id="aviatorCashout" onclick="cashoutAviator()">💰 Кэшаут</button>
-                <div class="status-text" id="aviatorStatus">Летит...</div>
-            `;
-            let coef = 1.0;
-            gameActive = true;
-            const coefLabel = document.getElementById('aviatorCoef');
-            const status = document.getElementById('aviatorStatus');
-            const cashoutBtn = document.getElementById('aviatorCashout');
-
-            gameInterval = setInterval(() => {
-                if (!gameActive) return;
-                coef += 0.03 + Math.random() * 0.07;
-                coefLabel.textContent = coef.toFixed(2) + 'x';
-                // Шанс краша 65% (значит выигрыш 35%)
-                if (Math.random() < 0.017 || coef > 6.0) {
-                    clearInterval(gameInterval);
-                    gameActive = false;
-                    cashoutBtn.style.display = 'none';
-                    status.textContent = '💥 CRASH! Баланс обнулён.';
-                    balance = 0;
-                    updateBalanceUI();
-                    sendData('aviator_result', { win: 0 });
-                }
-            }, 80);
-            return;
-        }
-
-        // ===== ROCKET (35% выигрыша) =====
-        if (game === 'rocket') {
-            content.innerHTML = `
-                <div style="text-align:center;font-size:56px;">🚀</div>
-                <div style="text-align:center;font-size:32px;font-weight:bold;margin:12px 0;color:#00ffc8;" id="rocketCoef">1.00x</div>
-                <button class="cashout-btn" id="rocketCashout" onclick="cashoutRocket()">💰 Кэшаут</button>
-                <div class="status-text" id="rocketStatus">Взлетает...</div>
-            `;
-            let coef = 1.0;
-            gameActive = true;
-            const coefLabel = document.getElementById('rocketCoef');
-            const status = document.getElementById('rocketStatus');
-            const cashoutBtn = document.getElementById('rocketCashout');
-
-            gameInterval = setInterval(() => {
-                if (!gameActive) return;
-                coef += 0.05 + Math.random() * 0.09;
-                coefLabel.textContent = coef.toFixed(2) + 'x';
-                if (Math.random() < 0.015 || coef > 10.0) {
-                    clearInterval(gameInterval);
-                    gameActive = false;
-                    cashoutBtn.style.display = 'none';
-                    status.textContent = '💥 EXPLODED! Баланс обнулён.';
-                    balance = 0;
-                    updateBalanceUI();
-                    sendData('rocket_result', { win: 0 });
-                }
-            }, 80);
-            return;
-        }
-
-        // ===== MINER (35% выигрыша) =====
-        if (game === 'miner') {
-            let field = [];
-            let mines = new Set();
-            let gems = new Set();
-            while (mines.size < 4) mines.add(Math.floor(Math.random() * 25));
-            while (gems.size < 3) {
-                let pos = Math.floor(Math.random() * 25);
-                if (!mines.has(pos)) gems.add(pos);
-            }
-            for (let i = 0; i < 25; i++) {
-                let icon = '⬛';
-                if (mines.has(i)) icon = '💣';
-                else if (gems.has(i)) icon = '💎';
-                field.push({ icon, opened: false });
-            }
-
-            let foundGems = 0;
-            let multiplier = 1.0;
-            let gameOver = false;
-
-            function renderMiner() {
-                let html = '<div class="miner-grid">';
-                field.forEach((cell, idx) => {
-                    let display = cell.opened ? cell.icon : '⬛';
-                    html += `<div class="miner-cell ${cell.opened ? 'opened' : ''}" onclick="clickMiner(${idx})">${display}</div>`;
-                });
-                html += '</div>';
-                html += `<div class="status-text">💎 ${foundGems}/3 • Множитель: x${multiplier.toFixed(1)}</div>`;
-                return html;
-            }
-
-            window.clickMiner = function(idx) {
-                if (gameOver) return;
-                const cell = field[idx];
-                if (cell.opened) return;
-                cell.opened = true;
-
-                if (cell.icon === '💣') {
-                    gameOver = true;
-                    gameActive = false;
-                    balance = 0;
-                    updateBalanceUI();
-                    sendData('miner_result', { win: 0 });
-                    document.getElementById('gameContent').innerHTML = renderMiner() + '<div class="status-text" style="color:red;">💥 Ты взорвался!</div>';
-                } else if (cell.icon === '💎') {
-                    foundGems++;
-                    multiplier *= 2;
-                    if (foundGems === 3) {
-                        gameOver = true;
-                        gameActive = false;
-                        const win = balance * multiplier;
-                        balance = win;
-                        updateBalanceUI();
-                        sendData('miner_result', { win: win });
-                        document.getElementById('gameContent').innerHTML = renderMiner() + `<div class="status-text" style="color:#00ffc8;">💎💎💎 Ты выиграл ${win.toFixed(2)}$!</div>`;
-                    } else {
-                        document.getElementById('gameContent').innerHTML = renderMiner();
-                    }
-                } else {
-                    document.getElementById('gameContent').innerHTML = renderMiner();
-                }
-            };
-
-            content.innerHTML = renderMiner();
-            gameActive = true;
-            return;
+    function customBet() {
+        const amount = prompt('Введите сумму ставки (1-1000$):', '10');
+        if (amount && !isNaN(amount) && amount > 0 && amount <= 1000) {
+            currentBet = parseFloat(amount);
+            updateBetUI();
+            document.querySelectorAll('.bet-btn').forEach(b => b.classList.remove('selected'));
         }
     }
 
-    // ===== КЭШАУТ =====
+    // ===== ЗАПУСК ИГРЫ =====
+    function startGame() {
+        if (currentBet > balance) {
+            alert('❌ Недостаточно средств!');
+            return;
+        }
+        if (cdActive) return;
+
+        const content = document.getElementById('gameContent');
+
+        if (currentGame === 'miner') {
+            // Майнер — без КД, сразу
+            startMiner(content);
+            return;
+        }
+
+        // Aviator и Rocket — КД 10 секунд
+        cdActive = true;
+        let cd = 10;
+        content.innerHTML = `
+            <div class="game-content">
+                <div style="font-size:48px;">${currentGame === 'aviator' ? '✈️' : '🚀'}</div>
+                <div style="font-size:24px;color:#ffd700;margin:12px 0;">${currentGame === 'aviator' ? 'Aviator' : 'Rocket'}</div>
+                <div style="font-size:32px;font-weight:bold;color:#ffd700;" id="cdTimer">${cd}</div>
+                <div style="color:#888;">Старт через...</div>
+            </div>
+        `;
+
+        const timer = setInterval(() => {
+            cd--;
+            const cdEl = document.getElementById('cdTimer');
+            if (cdEl) cdEl.textContent = cd;
+            if (cd <= 0) {
+                clearInterval(timer);
+                cdActive = false;
+                // Списываем ставку
+                balance -= currentBet;
+                updateBalanceUI();
+                if (currentGame === 'aviator') startAviator(content);
+                else startRocket(content);
+            }
+        }, 1000);
+    }
+
+    // ===== AVIATOR =====
+    function startAviator(content) {
+        gameActive = true;
+        content.innerHTML = `
+            <div class="graph">
+                <div class="line"></div>
+                <div class="label" id="aviatorCoef">1.00x</div>
+                <div id="cdOverlay" style="display:none;"></div>
+            </div>
+            <div class="multiplier-display" id="aviatorMultiplier">x1.00</div>
+            <button class="cashout-btn" id="aviatorCashout" onclick="cashoutAviator()">💰 ЗАБРАТЬ</button>
+            <div class="status-text" id="aviatorStatus">Летит...</div>
+            <div class="win-chance">Шансы: 35% x2.25 | 20% x3.00 | 5% x3.5</div>
+        `;
+
+        let coef = 1.0;
+        const coefLabel = document.getElementById('aviatorCoef');
+        const multLabel = document.getElementById('aviatorMultiplier');
+        const status = document.getElementById('aviatorStatus');
+        const cashoutBtn = document.getElementById('aviatorCashout');
+
+        gameInterval = setInterval(() => {
+            if (!gameActive) return;
+            coef += 0.02 + Math.random() * 0.05;
+            coefLabel.textContent = coef.toFixed(2) + 'x';
+            multLabel.textContent = 'x' + coef.toFixed(2);
+
+            // Определяем выигрыш по шансам
+            const roll = Math.random();
+            let crash = false;
+            if (roll < 0.35) { // 35% — x2.25
+                if (coef >= 2.25) crash = true;
+            } else if (roll < 0.55) { // 20% — x3.00
+                if (coef >= 3.00) crash = true;
+            } else if (roll < 0.60) { // 5% — x3.5
+                if (coef >= 3.50) crash = true;
+            } else { // 40% — проигрыш (краш до 1.5)
+                if (coef >= 1.5 + Math.random() * 0.5) crash = true;
+            }
+
+            if (crash || coef > 5.0) {
+                clearInterval(gameInterval);
+                gameActive = false;
+                cashoutBtn.disabled = true;
+                cashoutBtn.textContent = '💥 CRASH';
+                status.textContent = '💥 Проигрыш!';
+                sendData('aviator_result', { win: 0 });
+            }
+        }, 80);
+    }
+
     function cashoutAviator() {
         if (!gameActive) return;
         const coef = parseFloat(document.getElementById('aviatorCoef').textContent);
-        const win = balance * coef;
-        balance = win;
+        const win = currentBet * coef;
+        balance += win;
         updateBalanceUI();
         clearInterval(gameInterval);
         gameActive = false;
-        document.getElementById('aviatorCashout').style.display = 'none';
-        document.getElementById('aviatorStatus').textContent = `✅ Выигрыш: ${win.toFixed(2)}$`;
+        document.getElementById('aviatorCashout').disabled = true;
+        document.getElementById('aviatorStatus').textContent = `✅ Выигрыш: ${win.toFixed(2)}$ (x${coef.toFixed(2)})`;
         sendData('aviator_result', { win: win });
+    }
+
+    // ===== ROCKET =====
+    function startRocket(content) {
+        gameActive = true;
+        content.innerHTML = `
+            <div style="text-align:center;font-size:64px;">🚀</div>
+            <div style="text-align:center;font-size:32px;font-weight:bold;margin:12px 0;color:#ffd700;" id="rocketCoef">1.00x</div>
+            <button class="cashout-btn" id="rocketCashout" onclick="cashoutRocket()">💰 ЗАБРАТЬ</button>
+            <div class="status-text" id="rocketStatus">Взлетает...</div>
+            <div class="win-chance">Шансы: 35% x2.25 | 20% x3.00 | 5% x3.5</div>
+        `;
+
+        let coef = 1.0;
+        const coefLabel = document.getElementById('rocketCoef');
+        const status = document.getElementById('rocketStatus');
+        const cashoutBtn = document.getElementById('rocketCashout');
+
+        gameInterval = setInterval(() => {
+            if (!gameActive) return;
+            coef += 0.03 + Math.random() * 0.07;
+            coefLabel.textContent = coef.toFixed(2) + 'x';
+
+            const roll = Math.random();
+            let crash = false;
+            if (roll < 0.35) {
+                if (coef >= 2.25) crash = true;
+            } else if (roll < 0.55) {
+                if (coef >= 3.00) crash = true;
+            } else if (roll < 0.60) {
+                if (coef >= 3.50) crash = true;
+            } else {
+                if (coef >= 1.5 + Math.random() * 0.5) crash = true;
+            }
+
+            if (crash || coef > 6.0) {
+                clearInterval(gameInterval);
+                gameActive = false;
+                cashoutBtn.disabled = true;
+                cashoutBtn.textContent = '💥 EXPLODED';
+                status.textContent = '💥 Проигрыш!';
+                sendData('rocket_result', { win: 0 });
+            }
+        }, 80);
     }
 
     function cashoutRocket() {
         if (!gameActive) return;
         const coef = parseFloat(document.getElementById('rocketCoef').textContent);
-        const win = balance * coef;
-        balance = win;
+        const win = currentBet * coef;
+        balance += win;
         updateBalanceUI();
         clearInterval(gameInterval);
         gameActive = false;
-        document.getElementById('rocketCashout').style.display = 'none';
-        document.getElementById('rocketStatus').textContent = `✅ Выигрыш: ${win.toFixed(2)}$`;
+        document.getElementById('rocketCashout').disabled = true;
+        document.getElementById('rocketStatus').textContent = `✅ Выигрыш: ${win.toFixed(2)}$ (x${coef.toFixed(2)})`;
         sendData('rocket_result', { win: win });
     }
 
-    // Стартовый баланс 100$
-    balance = 100;
-    updateBalanceUI();
-</script>
-</body>
-</html>
+    // ===== MINER (без КД) =====
+    function startMiner(content) {
+        balance -= currentBet;
+        updateBalanceUI();
+
+        let field = [];
+        let mines = new Set();
+        let gems = new Set();
+        while (mines.size < 4) mines.add(Math.floor(Math.random() * 25));
+        while (gems.size < 3) {
+            let pos = Math.floor(Math.random() * 25);
+            if (!mines.has(pos)) gems.add(pos);
+        }
+        for (let i = 0; i < 25; i++) {
+            let icon = '⬛';
+            if (mines.has(i)) icon = '💣';
+            else if (gems.has(i)) icon = '💎';
+            field.push({ icon, opened: false });
+        }
+
+        let foundGems = 0;
+        let multiplier = 1.0;
+        let gameOver = false;
+
+        function renderMiner() {
+            let html = '<div class="miner-grid">';
+            field.forEach((cell, idx) => {
+                let display = cell.opened ? cell.icon : '⬛';
+                html += `<div class="miner-cell ${cell.opened ? 'opened' : ''}" onclick="clickMiner(${idx})">${display}</div>`;
+            });
+            html += '</div>';
+            html += `<div class="status-text">💎 ${foundGems}/3 • Множитель: x${multiplier.toFixed(1)}</div>`;
+            html += `<div class="win-chance">Шанс найти все 3 алмаза ~35%</div>`;
+            return html;
+        }
+
+        window.clickMiner = function(idx) {
+            if (gameOver) return;
+            const cell = field[idx];
+            if (cell.opened) return;
+            cell.opened = true;
+
+            if (cell.icon === '💣') {
+                gameOver = true;
+                gameActive = false;
+                sendData('miner_result', { win: 0 });
+                document.getElementById('gameContent').innerHTML = renderMiner() + '<div class="status-text" style="color:red;">💥 Ты взорвался!</div>';
+            } else if (cell.icon === '💎') {
+                foundGems++;
+                multiplier *= 2;
+                if (foundGems === 3) {
+                    gameOver = true;
+                    gameActive = false;
+                    const win = currentBet * multiplier;
+                    balance += win;
+                    updateBalanceUI();
+                    sendData('miner_result', { win: win });
+                    document.getElementById('gameContent').innerHTML = renderMiner() + `<div class="status-text" style="color:#ffd700;">💎💎💎 Ты выиграл ${win.toFixed(2)}$!</div>`;
+                } else {
+                    document.getElementById('gameContent').innerHTML = renderMiner();
+                }
+            } else {
+                document.getElementById('gameContent').innerHTML = renderMiner();
+            }
+        };
+
+        content.innerHTML =
