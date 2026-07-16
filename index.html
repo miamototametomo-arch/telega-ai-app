@@ -100,22 +100,6 @@
             border: 1px solid #1a1a2a;
             position: relative;
         }
-        .game-area .cd-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.75);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            font-weight: 700;
-            color: #ffd700;
-            border-radius: 20px;
-            z-index: 10;
-        }
         .cashout-btn {
             width: 100%;
             padding: 14px;
@@ -249,9 +233,6 @@
             cashout: '💰 ЗАБРАТЬ',
             crash: '💥 Проигрыш!',
             win: '✅ Выигрыш: {win}$ (x{coef})',
-            minerWin: '💎💎💎💎 Ты выиграл {win}$!',
-            minerCashout: '✅ Ты забрал {win}$!',
-            minerBomb: '💥 Ты взорвался!',
             noMoney: '❌ Недостаточно средств!',
             chooseGame: '👇 Выберите игру и сделайте ставку'
         },
@@ -261,9 +242,6 @@
             cashout: '💰 CASH OUT',
             crash: '💥 Loss!',
             win: '✅ Win: {win}$ (x{coef})',
-            minerWin: '💎💎💎💎 You won {win}$!',
-            minerCashout: '✅ You cashed out {win}$!',
-            minerBomb: '💥 You exploded!',
             noMoney: '❌ Insufficient funds!',
             chooseGame: '👇 Choose a game and place a bet'
         },
@@ -273,9 +251,6 @@
             cashout: '💰 АЛУ',
             crash: '💥 Ұтылыс!',
             win: '✅ Ұтыс: {win}$ (x{coef})',
-            minerWin: '💎💎💎💎 Сен {win}$ ұттың!',
-            minerCashout: '✅ Сен {win}$ алдың!',
-            minerBomb: '💥 Сен жарылдың!',
             noMoney: '❌ Қаражат жеткіліксіз!',
             chooseGame: '👇 Ойынды таңдап, ставка жасаңыз'
         }
@@ -290,7 +265,6 @@
     let isFlying = false;
     let history = [];
     let tg = window.Telegram?.WebApp;
-    let crashCoef = 0;
 
     // ===== СОХРАНЕНИЕ БАЛАНСА =====
     function saveBalance() {
@@ -360,7 +334,6 @@
     function updateUITexts() {
         document.getElementById('betLabel').textContent = LANG[currentLang].betLabel;
         document.getElementById('historyLabel').textContent = LANG[currentLang].historyLabel;
-        // Обновляем историю
         renderHistory();
     }
 
@@ -424,6 +397,7 @@
     function startRound() {
         if (currentBet > balance) {
             document.getElementById('gameContent').innerHTML = `<div style="text-align:center;color:#ff4444;padding:20px;">${LANG[currentLang].noMoney}</div>`;
+            setTimeout(() => { if (currentGame !== 'miner') startRound(); }, 3000);
             return;
         }
 
@@ -433,7 +407,7 @@
         isFlying = true;
         gameActive = true;
 
-        // Определяем коэффициент краша по шансам
+        // Шансы: 40% → x2, 30% → x3, 20% → x4, 10% → x5
         const roll = Math.random();
         let targetCoef;
         if (roll < 0.40) targetCoef = 2.0;
@@ -441,8 +415,8 @@
         else if (roll < 0.90) targetCoef = 4.0;
         else targetCoef = 5.0;
 
-        // Для визуального продолжения — случайный коэффициент после кэшаута
-        const extraCoef = 6 + Math.random() * 6; // от 6 до 12
+        // Для визуального продолжения после кэшаута
+        const extraCoef = 6 + Math.random() * 6; // 6-12
 
         const content = document.getElementById('gameContent');
         const isRocket = currentGame === 'rocket';
@@ -463,13 +437,14 @@
         const status = document.getElementById('gameStatus');
         const cashoutBtn = document.getElementById('gameCashout');
 
+        if (gameInterval) clearInterval(gameInterval);
         gameInterval = setInterval(() => {
             if (!gameActive) return;
             coef += 0.02 + Math.random() * 0.05;
             coefLabel.textContent = coef.toFixed(2) + 'x';
             multLabel.textContent = 'x' + coef.toFixed(2);
 
-            // Если достигли целевого коэффициента — падаем
+            // Если достигли целевого коэффициента и игрок не забрал — падаем
             if (coef >= targetCoef && !cashedOut) {
                 clearInterval(gameInterval);
                 gameActive = false;
@@ -480,12 +455,12 @@
                 addHistory(targetCoef);
                 enableBets(true);
                 sendData(currentGame + '_result', { win: 0 });
-                // Запускаем следующий раунд через 5 секунд
-                setTimeout(() => { if (currentGame !== 'miner') startRound(); }, 5000);
+                // Запускаем следующий раунд через 4 секунды
+                setTimeout(() => { if (currentGame !== 'miner') startRound(); }, 4000);
                 return;
             }
 
-            // Если игрок забрал — продолжаем лететь до extraCoef
+            // Если игрок забрал — летим до extraCoef, потом падаем
             if (cashedOut && coef >= extraCoef) {
                 clearInterval(gameInterval);
                 gameActive = false;
@@ -495,7 +470,7 @@
                 status.textContent = '💥 Самолёт разбился (после кэшаута)';
                 addHistory(coef);
                 enableBets(true);
-                setTimeout(() => { if (currentGame !== 'miner') startRound(); }, 5000);
+                setTimeout(() => { if (currentGame !== 'miner') startRound(); }, 4000);
                 return;
             }
         }, 80);
@@ -508,21 +483,19 @@
         const win = currentBet * coef;
         balance += win;
         updateBalanceUI();
-        document.getElementById('gameStatus').textContent = LANG[currentLang].win.replace('{win}', win.toFixed(2)).replace('{coef}', coef.toFixed(2));
+        const status = document.getElementById('gameStatus');
+        status.textContent = LANG[currentLang].win.replace('{win}', win.toFixed(2)).replace('{coef}', coef.toFixed(2));
         document.getElementById('gameCashout').disabled = true;
         sendData(currentGame + '_result', { win: win });
-        // Самолёт продолжает лететь (cashedOut = true)
-        // Но мы уже не даём забрать повторно
-        // В интервале выше cashedOut = true, и он полетит до extraCoef
-        // Устанавливаем флаг
+        // Помечаем, что игрок забрал — самолёт продолжит лететь до extraCoef
         window._cashedOut = true;
-        // В интервале проверяем этот флаг
-        // Переопределим cashout, чтобы нельзя было нажать дважды
+        // Отключаем кнопку кэшаута
         document.getElementById('gameCashout').onclick = null;
+        // В интервале cashedOut станет true, и он полетит до extraCoef
     }
 
     // ===== МАЙНЕР =====
-    // (оставляем как есть, без изменений)
+    // (без изменений, оставляем как есть)
 
     // ===== ИНИЦИАЛИЗАЦИЯ =====
     selectGame('aviator');
