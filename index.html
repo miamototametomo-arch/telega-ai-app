@@ -23,7 +23,6 @@
             border-radius: 28px;
             padding: 20px;
             border: 1px solid #1f1f30;
-            box-shadow: 0 0 60px rgba(255, 215, 0, 0.06);
         }
         .header {
             display: flex;
@@ -34,19 +33,8 @@
             border-radius: 16px;
             margin-bottom: 16px;
         }
-        .balance {
-            font-size: 24px;
-            font-weight: 700;
-            color: #ffd700;
-            letter-spacing: 0.5px;
-        }
-        .online {
-            font-size: 14px;
-            color: #888;
-            background: #0a0a14;
-            padding: 4px 14px;
-            border-radius: 30px;
-        }
+        .balance { font-size: 24px; font-weight: 700; color: #ffd700; }
+        .online { font-size: 14px; color: #888; background: #0a0a14; padding: 4px 14px; border-radius: 30px; }
         .game-selector {
             display: flex;
             gap: 6px;
@@ -67,25 +55,15 @@
             border-radius: 12px;
             transition: 0.3s;
         }
-        .game-btn.active {
-            background: #ffd700;
-            color: #0a0a12;
-        }
+        .game-btn.active { background: #ffd700; color: #0a0a12; }
         .game-btn:active { transform: scale(0.95); }
-
         .bet-section {
             background: #1a1a2a;
             padding: 16px;
             border-radius: 16px;
             margin: 12px 0;
         }
-        .bet-label {
-            color: #aaa;
-            font-size: 12px;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+        .bet-label { color: #aaa; font-size: 12px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
         .bet-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -103,30 +81,17 @@
             transition: 0.2s;
         }
         .bet-btn:active { transform: scale(0.92); }
-        .bet-btn.selected {
-            background: #ffd700;
-            color: #0a0a12;
-        }
-        .bet-btn.custom {
-            background: #3a3a4e;
-            font-size: 20px;
-        }
-
+        .bet-btn.selected { background: #ffd700; color: #0a0a12; }
+        .bet-btn.custom { background: #3a3a4e; font-size: 20px; }
         .game-area {
             background: #12121c;
             border-radius: 20px;
             padding: 16px;
-            min-height: 300px;
+            min-height: 260px;
             margin-top: 12px;
             border: 1px solid #1a1a2a;
             position: relative;
         }
-        .game-content {
-            text-align: center;
-            color: #888;
-            padding: 20px 0;
-        }
-
         .start-btn {
             width: 100%;
             padding: 16px;
@@ -141,12 +106,7 @@
             margin-top: 12px;
         }
         .start-btn:active { transform: scale(0.96); }
-        .start-btn:disabled {
-            background: #444;
-            color: #888;
-            cursor: not-allowed;
-        }
-
+        .start-btn:disabled { background: #444; color: #888; cursor: not-allowed; }
         .cashout-btn {
             width: 100%;
             padding: 14px;
@@ -161,12 +121,7 @@
             transition: 0.2s;
         }
         .cashout-btn:active { transform: scale(0.96); }
-        .cashout-btn:disabled {
-            background: #444;
-            color: #888;
-            cursor: not-allowed;
-        }
-
+        .cashout-btn:disabled { background: #444; color: #888; cursor: not-allowed; }
         .miner-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -187,10 +142,9 @@
         }
         .miner-cell:active { transform: scale(0.88); }
         .miner-cell.opened { background: #1a1a2a; cursor: default; }
-
         .graph {
             width: 100%;
-            height: 160px;
+            height: 140px;
             background: #0a0a14;
             border-radius: 16px;
             position: relative;
@@ -210,11 +164,32 @@
             position: absolute;
             top: 10px;
             right: 14px;
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 700;
             color: #ffd700;
         }
-        .graph .cd-overlay {
+        .status-text { text-align: center; margin-top: 12px; font-size: 15px; color: #aaa; }
+        .multiplier-display { font-size: 22px; color: #ffd700; margin: 8px 0; font-weight: 700; }
+        .footer { text-align: center; font-size: 11px; color: #2a2a3a; margin-top: 16px; }
+        .bots-table {
+            margin-top: 16px;
+            background: #1a1a2a;
+            border-radius: 16px;
+            padding: 12px;
+        }
+        .bots-table .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #2a2a3a;
+            font-size: 14px;
+        }
+        .bots-table .row:last-child { border-bottom: none; }
+        .bots-table .win { color: #00ff88; }
+        .bots-table .lose { color: #ff4444; }
+        .bots-table .bot-name { color: #aaa; }
+        .bots-table .bot-bet { color: #ffd700; }
+        .cd-overlay {
             position: absolute;
             top: 0;
             left: 0;
@@ -228,35 +203,6 @@
             font-weight: 700;
             color: #ffd700;
             border-radius: 16px;
-        }
-        .status-text {
-            text-align: center;
-            margin-top: 12px;
-            font-size: 15px;
-            color: #aaa;
-        }
-        .multiplier-display {
-            font-size: 24px;
-            color: #ffd700;
-            margin: 8px 0;
-            font-weight: 700;
-        }
-        .win-chance {
-            font-size: 12px;
-            color: #666;
-            margin-top: 6px;
-        }
-        .footer {
-            text-align: center;
-            font-size: 11px;
-            color: #2a2a3a;
-            margin-top: 16px;
-        }
-        .game-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #ffd700;
-            margin-bottom: 8px;
         }
         .hidden { display: none; }
     </style>
@@ -288,9 +234,18 @@
 
     <div class="game-area" id="gameArea">
         <div id="gameContent">
-            <div class="game-content">👇 Выберите игру<br>и сделайте ставку</div>
+            <div style="text-align:center;color:#888;padding:20px;">👇 Выберите игру<br>и сделайте ставку</div>
             <button class="start-btn" id="startBtn" onclick="startGame()">🚀 СТАРТ</button>
         </div>
+    </div>
+
+    <!-- Таблица ботов -->
+    <div class="bots-table" id="botsTable">
+        <div class="row"><span class="bot-name">🤖 Бот 1</span><span class="bot-bet" id="bot1bet">10$</span><span id="bot1result">⏳</span></div>
+        <div class="row"><span class="bot-name">🤖 Бот 2</span><span class="bot-bet" id="bot2bet">25$</span><span id="bot2result">⏳</span></div>
+        <div class="row"><span class="bot-name">🤖 Бот 3</span><span class="bot-bet" id="bot3bet">5$</span><span id="bot3result">⏳</span></div>
+        <div class="row"><span class="bot-name">🤖 Бот 4</span><span class="bot-bet" id="bot4bet">50$</span><span id="bot4result">⏳</span></div>
+        <div class="row"><span class="bot-name">🤖 Бот 5</span><span class="bot-bet" id="bot5bet">15$</span><span id="bot5result">⏳</span></div>
     </div>
 
     <div class="footer">Casino • v3.29.1</div>
@@ -304,6 +259,7 @@
     let gameActive = false;
     let cdActive = false;
     let tg = window.Telegram?.WebApp;
+    let botBets = [];
 
     function updateBalanceUI() {
         document.getElementById('balanceDisplay').textContent = `💰 ${balance.toFixed(2)}$`;
@@ -359,6 +315,33 @@
         updateOnlineUI(42);
     }
 
+    function generateBotBets() {
+        const names = ['Бот 1', 'Бот 2', 'Бот 3', 'Бот 4', 'Бот 5'];
+        botBets = [];
+        for (let i = 0; i < 5; i++) {
+            const bet = Math.floor(Math.random() * 50) + 1;
+            botBets.push({ name: names[i], bet: bet, win: false });
+            document.getElementById(`bot${i+1}bet`).textContent = bet + '$';
+            document.getElementById(`bot${i+1}result`).textContent = '⏳';
+            document.getElementById(`bot${i+1}result`).className = '';
+        }
+    }
+
+    function updateBots(winnerIndex) {
+        for (let i = 0; i < 5; i++) {
+            const el = document.getElementById(`bot${i+1}result`);
+            if (i === winnerIndex) {
+                el.textContent = '✅ ВЫИГРАЛ';
+                el.className = 'win';
+            } else {
+                el.textContent = '❌';
+                el.className = 'lose';
+            }
+        }
+    }
+
+    generateBotBets();
+
     function selectGame(game) {
         if (cdActive) return;
         currentGame = game;
@@ -367,9 +350,10 @@
         if (gameInterval) clearInterval(gameInterval);
         gameActive = false;
         document.getElementById('gameContent').innerHTML = `
-            <div class="game-content">✅ ${game === 'aviator' ? 'Aviator' : game === 'rocket' ? 'Rocket' : 'Майнер'}</div>
+            <div style="text-align:center;color:#888;padding:20px;">✅ ${game === 'aviator' ? 'Aviator' : game === 'rocket' ? 'Rocket' : 'Майнер'}</div>
             <button class="start-btn" onclick="startGame()">🚀 СТАРТ</button>
         `;
+        generateBotBets();
     }
 
     function selectBet(amount) {
@@ -404,11 +388,11 @@
             return;
         }
 
-        // КД 10 секунд для Aviator и Rocket
+        // КД 10 секунд
         cdActive = true;
         let cd = 10;
         content.innerHTML = `
-            <div class="game-content">
+            <div style="text-align:center;padding:10px 0;">
                 <div style="font-size:56px;">${currentGame === 'aviator' ? '✈️' : '🚀'}</div>
                 <div style="font-size:22px;color:#ffd700;margin:8px 0;">${currentGame === 'aviator' ? 'Aviator' : 'Rocket'}</div>
                 <div style="font-size:48px;font-weight:700;color:#ffd700;" id="cdTimer">${cd}</div>
@@ -442,7 +426,6 @@
             <div class="multiplier-display" id="aviatorMultiplier">x1.00</div>
             <button class="cashout-btn" id="aviatorCashout" onclick="cashoutAviator()">💰 ЗАБРАТЬ</button>
             <div class="status-text" id="aviatorStatus">Летит...</div>
-            <div class="win-chance">Шансы: 35% x2.25 | 20% x3.00 | 5% x3.5</div>
         `;
 
         let coef = 1.0;
@@ -459,14 +442,12 @@
 
             const roll = Math.random();
             let crash = false;
-            if (roll < 0.35) {
-                if (coef >= 2.25) crash = true;
-            } else if (roll < 0.55) {
-                if (coef >= 3.00) crash = true;
-            } else if (roll < 0.60) {
-                if (coef >= 3.50) crash = true;
+            if (roll < 0.50) {
+                if (coef >= 3.0) crash = true;
+            } else if (roll < 0.80) {
+                if (coef >= 4.0) crash = true;
             } else {
-                if (coef >= 1.5 + Math.random() * 0.5) crash = true;
+                if (coef >= 1.25 + Math.random() * 0.15) crash = true;
             }
 
             if (crash || coef > 5.0) {
@@ -476,6 +457,9 @@
                 cashoutBtn.textContent = '💥 CRASH';
                 status.textContent = '💥 Проигрыш!';
                 sendData('aviator_result', { win: 0 });
+                // Бот выигрывает
+                const winner = Math.floor(Math.random() * 5);
+                updateBots(winner);
             }
         }, 80);
     }
@@ -491,6 +475,8 @@
         document.getElementById('aviatorCashout').disabled = true;
         document.getElementById('aviatorStatus').textContent = `✅ Выигрыш: ${win.toFixed(2)}$ (x${coef.toFixed(2)})`;
         sendData('aviator_result', { win: win });
+        const winner = Math.floor(Math.random() * 5);
+        updateBots(winner);
     }
 
     function startRocket(content) {
@@ -500,7 +486,6 @@
             <div style="text-align:center;font-size:32px;font-weight:700;margin:12px 0;color:#ffd700;" id="rocketCoef">1.00x</div>
             <button class="cashout-btn" id="rocketCashout" onclick="cashoutRocket()">💰 ЗАБРАТЬ</button>
             <div class="status-text" id="rocketStatus">Взлетает...</div>
-            <div class="win-chance">Шансы: 35% x2.25 | 20% x3.00 | 5% x3.5</div>
         `;
 
         let coef = 1.0;
@@ -515,23 +500,23 @@
 
             const roll = Math.random();
             let crash = false;
-            if (roll < 0.35) {
-                if (coef >= 2.25) crash = true;
-            } else if (roll < 0.55) {
-                if (coef >= 3.00) crash = true;
-            } else if (roll < 0.60) {
-                if (coef >= 3.50) crash = true;
+            if (roll < 0.50) {
+                if (coef >= 3.0) crash = true;
+            } else if (roll < 0.80) {
+                if (coef >= 4.0) crash = true;
             } else {
-                if (coef >= 1.5 + Math.random() * 0.5) crash = true;
+                if (coef >= 1.25 + Math.random() * 0.15) crash = true;
             }
 
-            if (crash || coef > 6.0) {
+            if (crash || coef > 5.0) {
                 clearInterval(gameInterval);
                 gameActive = false;
                 cashoutBtn.disabled = true;
                 cashoutBtn.textContent = '💥 EXPLODED';
                 status.textContent = '💥 Проигрыш!';
                 sendData('rocket_result', { win: 0 });
+                const winner = Math.floor(Math.random() * 5);
+                updateBots(winner);
             }
         }, 80);
     }
@@ -547,14 +532,16 @@
         document.getElementById('rocketCashout').disabled = true;
         document.getElementById('rocketStatus').textContent = `✅ Выигрыш: ${win.toFixed(2)}$ (x${coef.toFixed(2)})`;
         sendData('rocket_result', { win: win });
+        const winner = Math.floor(Math.random() * 5);
+        updateBots(winner);
     }
 
     function startMiner(content) {
         let field = [];
         let mines = new Set();
         let gems = new Set();
-        while (mines.size < 4) mines.add(Math.floor(Math.random() * 25));
-        while (gems.size < 3) {
+        while (mines.size < 5) mines.add(Math.floor(Math.random() * 25));
+        while (gems.size < 4) {
             let pos = Math.floor(Math.random() * 25);
             if (!mines.has(pos)) gems.add(pos);
         }
@@ -569,15 +556,26 @@
         let multiplier = 1.0;
         let gameOver = false;
 
-        function renderMiner() {
+        function getMultiplier(count) {
+            if (count === 0) return 0;
+            if (count === 1) return 0.5;
+            if (count === 2) return 0.5;
+            if (count === 3) return 1.0;
+            if (count === 4) return 1.5;
+            return 0;
+        }
+
+        function renderMiner(showCashout) {
             let html = '<div class="miner-grid">';
             field.forEach((cell, idx) => {
                 let display = cell.opened ? cell.icon : '⬛';
                 html += `<div class="miner-cell ${cell.opened ? 'opened' : ''}" onclick="clickMiner(${idx})">${display}</div>`;
             });
             html += '</div>';
-            html += `<div class="status-text">💎 ${foundGems}/3 • Множитель: x${multiplier.toFixed(1)}</div>`;
-            html += `<div class="win-chance">Шанс найти все 3 алмаза ~35%</div>`;
+            html += `<div class="status-text">💎 ${foundGems}/4 • Множитель: x${getMultiplier(foundGems)}</div>`;
+            if (showCashout && foundGems >= 2 && foundGems <= 3) {
+                html += `<button class="cashout-btn" onclick="cashoutMiner()">💰 ЗАБРАТЬ (x${getMultiplier(foundGems)})</button>`;
+            }
             return html;
         }
 
@@ -591,28 +589,40 @@
                 gameOver = true;
                 gameActive = false;
                 sendData('miner_result', { win: 0 });
-                document.getElementById('gameContent').innerHTML = renderMiner() + '<div class="status-text" style="color:red;">💥 Ты взорвался!</div>';
+                document.getElementById('gameContent').innerHTML = renderMiner(false) + '<div class="status-text" style="color:red;">💥 Ты взорвался!</div>';
             } else if (cell.icon === '💎') {
                 foundGems++;
-                multiplier *= 2;
-                if (foundGems === 3) {
+                if (foundGems === 4) {
                     gameOver = true;
                     gameActive = false;
-                    const win = currentBet * multiplier;
+                    const win = currentBet * 1.5;
                     balance += win;
                     updateBalanceUI();
                     sendData('miner_result', { win: win });
-                    document.getElementById('gameContent').innerHTML = renderMiner() + `<div class="status-text" style="color:#ffd700;">💎💎💎 Ты выиграл ${win.toFixed(2)}$!</div>`;
+                    document.getElementById('gameContent').innerHTML = renderMiner(false) + `<div class="status-text" style="color:#ffd700;">💎💎💎💎 Ты выиграл ${win.toFixed(2)}$!</div>`;
                 } else {
-                    document.getElementById('gameContent').innerHTML = renderMiner();
+                    document.getElementById('gameContent').innerHTML = renderMiner(true);
                 }
             } else {
-                document.getElementById('gameContent').innerHTML = renderMiner();
+                document.getElementById('gameContent').innerHTML = renderMiner(true);
             }
         };
 
-        content.innerHTML = renderMiner();
+        window.cashoutMiner = function() {
+            if (gameOver) return;
+            const mult = getMultiplier(foundGems);
+            const win = currentBet * mult;
+            balance += win;
+            updateBalanceUI();
+            gameOver = true;
+            gameActive = false;
+            sendData('miner_result', { win: win });
+            document.getElementById('gameContent').innerHTML = renderMiner(false) + `<div class="status-text" style="color:#ffd700;">✅ Ты забрал ${win.toFixed(2)}$!</div>`;
+        };
+
+        content.innerHTML = renderMiner(true);
         gameActive = true;
+        generateBotBets();
     }
 
     balance = 100;
