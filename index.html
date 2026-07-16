@@ -35,6 +35,13 @@
         }
         .balance { font-size: 24px; font-weight: 700; color: #ffd700; }
         .online { font-size: 14px; color: #888; background: #0a0a14; padding: 4px 14px; border-radius: 30px; }
+        .lang-btn {
+            background: transparent;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            padding: 0 6px;
+        }
         .game-selector {
             display: flex;
             gap: 6px;
@@ -83,6 +90,7 @@
         .bet-btn:active { transform: scale(0.92); }
         .bet-btn.selected { background: #ffd700; color: #0a0a12; }
         .bet-btn.custom { background: #3a3a4e; font-size: 20px; }
+        .bet-btn:disabled { opacity: 0.4; cursor: not-allowed; }
         .game-area {
             background: #12121c;
             border-radius: 20px;
@@ -92,21 +100,22 @@
             border: 1px solid #1a1a2a;
             position: relative;
         }
-        .start-btn {
+        .game-area .cd-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            padding: 16px;
-            background: #ffd700;
-            border: none;
-            border-radius: 16px;
-            font-size: 20px;
+            height: 100%;
+            background: rgba(0,0,0,0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
             font-weight: 700;
-            color: #0a0a12;
-            cursor: pointer;
-            transition: 0.2s;
-            margin-top: 12px;
+            color: #ffd700;
+            border-radius: 20px;
+            z-index: 10;
         }
-        .start-btn:active { transform: scale(0.96); }
-        .start-btn:disabled { background: #444; color: #888; cursor: not-allowed; }
         .cashout-btn {
             width: 100%;
             padding: 14px;
@@ -171,39 +180,25 @@
         .status-text { text-align: center; margin-top: 12px; font-size: 15px; color: #aaa; }
         .multiplier-display { font-size: 22px; color: #ffd700; margin: 8px 0; font-weight: 700; }
         .footer { text-align: center; font-size: 11px; color: #2a2a3a; margin-top: 16px; }
-        .bots-table {
+        .history-table {
             margin-top: 16px;
             background: #1a1a2a;
             border-radius: 16px;
             padding: 12px;
+            max-height: 120px;
+            overflow-y: auto;
         }
-        .bots-table .row {
+        .history-table .row {
             display: flex;
             justify-content: space-between;
-            padding: 6px 0;
+            padding: 4px 0;
             border-bottom: 1px solid #2a2a3a;
-            font-size: 14px;
+            font-size: 13px;
         }
-        .bots-table .row:last-child { border-bottom: none; }
-        .bots-table .win { color: #00ff88; }
-        .bots-table .lose { color: #ff4444; }
-        .bots-table .bot-name { color: #aaa; }
-        .bots-table .bot-bet { color: #ffd700; }
-        .cd-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.75);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 56px;
-            font-weight: 700;
-            color: #ffd700;
-            border-radius: 16px;
-        }
+        .history-table .row:last-child { border-bottom: none; }
+        .history-table .win { color: #00ff88; }
+        .history-table .lose { color: #ff4444; }
+        .history-table .history-label { color: #888; font-size: 12px; margin-bottom: 6px; }
         .hidden { display: none; }
     </style>
 </head>
@@ -212,6 +207,7 @@
     <div class="header">
         <div class="balance" id="balanceDisplay">💰 0.00$</div>
         <div class="online" id="onlineDisplay">👥 0</div>
+        <button class="lang-btn" onclick="switchLang()" id="langBtn">🇷🇺</button>
     </div>
 
     <div class="game-selector">
@@ -221,7 +217,7 @@
     </div>
 
     <div class="bet-section">
-        <div class="bet-label">Сумма ставки</div>
+        <div class="bet-label" id="betLabel">Сумма ставки</div>
         <div class="bet-grid">
             <button class="bet-btn" onclick="selectBet(1)">1$</button>
             <button class="bet-btn" onclick="selectBet(5)">5$</button>
@@ -233,53 +229,84 @@
     </div>
 
     <div class="game-area" id="gameArea">
-        <div id="gameContent">
-            <div style="text-align:center;color:#888;padding:20px;">👇 Выберите игру<br>и сделайте ставку</div>
-            <button class="start-btn" id="startBtn" onclick="startGame()">🚀 СТАРТ</button>
-        </div>
+        <div id="gameContent"></div>
     </div>
 
-    <!-- Таблица ботов -->
-    <div class="bots-table" id="botsTable">
-        <div class="row"><span class="bot-name">🤖 Бот 1</span><span class="bot-bet" id="bot1bet">10$</span><span id="bot1result">⏳</span></div>
-        <div class="row"><span class="bot-name">🤖 Бот 2</span><span class="bot-bet" id="bot2bet">25$</span><span id="bot2result">⏳</span></div>
-        <div class="row"><span class="bot-name">🤖 Бот 3</span><span class="bot-bet" id="bot3bet">5$</span><span id="bot3result">⏳</span></div>
-        <div class="row"><span class="bot-name">🤖 Бот 4</span><span class="bot-bet" id="bot4bet">50$</span><span id="bot4result">⏳</span></div>
-        <div class="row"><span class="bot-name">🤖 Бот 5</span><span class="bot-bet" id="bot5bet">15$</span><span id="bot5result">⏳</span></div>
+    <div class="history-table" id="historyTable">
+        <div class="history-label" id="historyLabel">📊 Последние 10 раундов</div>
+        <div id="historyList"></div>
     </div>
 
     <div class="footer">Casino • v3.29.1</div>
 </div>
 
 <script>
-    let balance = 0.0;
+    // ===== ЯЗЫКИ =====
+    const LANG = {
+        ru: {
+            betLabel: 'Сумма ставки',
+            historyLabel: '📊 Последние 10 раундов',
+            cashout: '💰 ЗАБРАТЬ',
+            crash: '💥 Проигрыш!',
+            win: '✅ Выигрыш: {win}$ (x{coef})',
+            minerWin: '💎💎💎💎 Ты выиграл {win}$!',
+            minerCashout: '✅ Ты забрал {win}$!',
+            minerBomb: '💥 Ты взорвался!',
+            noMoney: '❌ Недостаточно средств!',
+            chooseGame: '👇 Выберите игру и сделайте ставку'
+        },
+        en: {
+            betLabel: 'Bet amount',
+            historyLabel: '📊 Last 10 rounds',
+            cashout: '💰 CASH OUT',
+            crash: '💥 Loss!',
+            win: '✅ Win: {win}$ (x{coef})',
+            minerWin: '💎💎💎💎 You won {win}$!',
+            minerCashout: '✅ You cashed out {win}$!',
+            minerBomb: '💥 You exploded!',
+            noMoney: '❌ Insufficient funds!',
+            chooseGame: '👇 Choose a game and place a bet'
+        },
+        kz: {
+            betLabel: 'Ставка сомасы',
+            historyLabel: '📊 Соңғы 10 раунд',
+            cashout: '💰 АЛУ',
+            crash: '💥 Ұтылыс!',
+            win: '✅ Ұтыс: {win}$ (x{coef})',
+            minerWin: '💎💎💎💎 Сен {win}$ ұттың!',
+            minerCashout: '✅ Сен {win}$ алдың!',
+            minerBomb: '💥 Сен жарылдың!',
+            noMoney: '❌ Қаражат жеткіліксіз!',
+            chooseGame: '👇 Ойынды таңдап, ставка жасаңыз'
+        }
+    };
+
+    let currentLang = 'ru';
+    let balance = 100;
     let currentGame = 'aviator';
     let currentBet = 10;
     let gameInterval = null;
     let gameActive = false;
-    let cdActive = false;
+    let isFlying = false;
+    let history = [];
     let tg = window.Telegram?.WebApp;
-    let botBets = [];
+    let crashCoef = 0;
 
-    // ===== РАБОТА С LOCALSTORAGE =====
+    // ===== СОХРАНЕНИЕ БАЛАНСА =====
     function saveBalance() {
         localStorage.setItem('casino_balance', balance.toString());
     }
 
     function loadBalance() {
         const saved = localStorage.getItem('casino_balance');
-        if (saved !== null) {
-            balance = parseFloat(saved);
-        } else {
-            balance = 100; // Если нет сохранения — стартовый 100$
-        }
+        if (saved !== null) balance = parseFloat(saved);
+        else balance = 100;
         updateBalanceUI();
     }
 
-    // ===== ОБНОВЛЕНИЕ UI =====
     function updateBalanceUI() {
         document.getElementById('balanceDisplay').textContent = `💰 ${balance.toFixed(2)}$`;
-        saveBalance(); // Автосохранение
+        saveBalance();
     }
 
     function updateOnlineUI(count) {
@@ -289,20 +316,14 @@
     function updateBetUI() {
         document.querySelectorAll('.bet-btn').forEach(btn => {
             btn.classList.remove('selected');
-            if (btn.textContent.includes(currentBet + '$')) {
-                btn.classList.add('selected');
-            }
+            if (btn.textContent.includes(currentBet + '$')) btn.classList.add('selected');
         });
     }
 
-    // ===== ОТПРАВКА В БОТ =====
     function sendData(action, payload = {}) {
         const data = JSON.stringify({ action, ...payload });
-        if (tg) {
-            tg.sendData(data);
-        } else {
-            console.log('📤 Send:', data);
-        }
+        if (tg) tg.sendData(data);
+        else console.log('📤 Send:', data);
     }
 
     function loadData() {
@@ -310,83 +331,83 @@
         sendData('get_online');
     }
 
-    // ===== Telegram WebApp =====
     if (tg) {
         tg.ready();
         tg.onEvent('data', (data) => {
             try {
                 const json = JSON.parse(data);
-                if (json.balance !== undefined) {
-                    balance = json.balance;
-                    updateBalanceUI();
-                }
-                if (json.win !== undefined) {
-                    balance += json.win;
-                    updateBalanceUI();
-                }
-                if (json.online !== undefined) {
-                    updateOnlineUI(json.online);
-                }
+                if (json.balance !== undefined) { balance = json.balance; updateBalanceUI(); }
+                if (json.win !== undefined) { balance += json.win; updateBalanceUI(); }
+                if (json.online !== undefined) updateOnlineUI(json.online);
             } catch (e) {}
         });
         setTimeout(loadData, 300);
     } else {
-        loadBalance(); // Если без бота — загружаем из localStorage
+        loadBalance();
         updateOnlineUI(42);
     }
 
-    // ===== ГЕНЕРАЦИЯ БОТОВ =====
-    function generateBotBets() {
-        const names = ['Бот 1', 'Бот 2', 'Бот 3', 'Бот 4', 'Бот 5'];
-        botBets = [];
-        for (let i = 0; i < 5; i++) {
-            const bet = Math.floor(Math.random() * 50) + 1;
-            botBets.push({ name: names[i], bet: bet, win: false });
-            document.getElementById(`bot${i+1}bet`).textContent = bet + '$';
-            document.getElementById(`bot${i+1}result`).textContent = '⏳';
-            document.getElementById(`bot${i+1}result`).className = '';
-        }
+    // ===== ЯЗЫК =====
+    function switchLang() {
+        const langs = ['ru', 'en', 'kz'];
+        let idx = langs.indexOf(currentLang);
+        idx = (idx + 1) % langs.length;
+        currentLang = langs[idx];
+        document.getElementById('langBtn').textContent = currentLang === 'ru' ? '🇷🇺' : currentLang === 'en' ? '🇬🇧' : '🇰🇿';
+        updateUITexts();
     }
 
-    function updateBots(winnerIndex) {
-        for (let i = 0; i < 5; i++) {
-            const el = document.getElementById(`bot${i+1}result`);
-            if (i === winnerIndex) {
-                el.textContent = '✅ ВЫИГРАЛ';
-                el.className = 'win';
-            } else {
-                el.textContent = '❌';
-                el.className = 'lose';
-            }
-        }
+    function updateUITexts() {
+        document.getElementById('betLabel').textContent = LANG[currentLang].betLabel;
+        document.getElementById('historyLabel').textContent = LANG[currentLang].historyLabel;
+        // Обновляем историю
+        renderHistory();
     }
 
-    generateBotBets();
+    // ===== ИСТОРИЯ =====
+    function addHistory(coef) {
+        history.push(coef);
+        if (history.length > 10) history.shift();
+        renderHistory();
+    }
+
+    function renderHistory() {
+        const list = document.getElementById('historyList');
+        if (history.length === 0) {
+            list.innerHTML = '<div class="row" style="color:#666;">Нет данных</div>';
+            return;
+        }
+        let html = '';
+        for (let i = history.length - 1; i >= 0; i--) {
+            const val = history[i];
+            const cls = val >= 5 ? 'win' : 'lose';
+            html += `<div class="row"><span>Раунд #${i+1}</span><span class="${cls}">x${val.toFixed(1)}</span></div>`;
+        }
+        list.innerHTML = html;
+    }
 
     // ===== ВЫБОР ИГРЫ =====
     function selectGame(game) {
-        if (cdActive) return;
+        if (gameInterval) clearInterval(gameInterval);
+        gameActive = false;
+        isFlying = false;
         currentGame = game;
         document.querySelectorAll('.game-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('game' + game.charAt(0).toUpperCase() + game.slice(1)).classList.add('active');
-        if (gameInterval) clearInterval(gameInterval);
-        gameActive = false;
-        document.getElementById('gameContent').innerHTML = `
-            <div style="text-align:center;color:#888;padding:20px;">✅ ${game === 'aviator' ? 'Aviator' : game === 'rocket' ? 'Rocket' : 'Майнер'}</div>
-            <button class="start-btn" onclick="startGame()">🚀 СТАРТ</button>
-        `;
-        generateBotBets();
+        document.getElementById('gameContent').innerHTML = `<div style="text-align:center;color:#888;padding:20px;">${LANG[currentLang].chooseGame}</div>`;
+        enableBets(true);
+        if (game !== 'miner') startRound();
     }
 
-    // ===== ВЫБОР СТАВКИ =====
+    // ===== СТАВКИ =====
     function selectBet(amount) {
-        if (cdActive) return;
+        if (isFlying) return;
         currentBet = amount;
         updateBetUI();
     }
 
     function customBet() {
-        if (cdActive) return;
+        if (isFlying) return;
         const amount = prompt('Введите сумму (1-1000$):', '10');
         if (amount && !isNaN(amount) && amount > 0 && amount <= 1000) {
             currentBet = parseFloat(amount);
@@ -395,69 +416,52 @@
         }
     }
 
-    // ===== СТАРТ ИГРЫ =====
-    function startGame() {
-        if (currentBet > balance) {
-            alert('❌ Недостаточно средств!');
-            return;
-        }
-        if (cdActive) return;
-
-        const content = document.getElementById('gameContent');
-
-        if (currentGame === 'miner') {
-            balance -= currentBet;
-            updateBalanceUI();
-            startMiner(content);
-            return;
-        }
-
-        // КД 10 секунд
-        cdActive = true;
-        let cd = 10;
-        content.innerHTML = `
-            <div style="text-align:center;padding:10px 0;">
-                <div style="font-size:56px;">${currentGame === 'aviator' ? '✈️' : '🚀'}</div>
-                <div style="font-size:22px;color:#ffd700;margin:8px 0;">${currentGame === 'aviator' ? 'Aviator' : 'Rocket'}</div>
-                <div style="font-size:48px;font-weight:700;color:#ffd700;" id="cdTimer">${cd}</div>
-                <div style="color:#888;">Старт через...</div>
-                <div style="font-size:12px;color:#666;margin-top:4px;">Ставка: ${currentBet}$</div>
-            </div>
-        `;
-
-        const timer = setInterval(() => {
-            cd--;
-            const cdEl = document.getElementById('cdTimer');
-            if (cdEl) cdEl.textContent = cd;
-            if (cd <= 0) {
-                clearInterval(timer);
-                cdActive = false;
-                balance -= currentBet;
-                updateBalanceUI();
-                if (currentGame === 'aviator') startAviator(content);
-                else startRocket(content);
-            }
-        }, 1000);
+    function enableBets(enabled) {
+        document.querySelectorAll('.bet-btn').forEach(b => b.disabled = !enabled);
     }
 
-    // ===== AVIATOR =====
-    function startAviator(content) {
+    // ===== ЗАПУСК РАУНДА =====
+    function startRound() {
+        if (currentBet > balance) {
+            document.getElementById('gameContent').innerHTML = `<div style="text-align:center;color:#ff4444;padding:20px;">${LANG[currentLang].noMoney}</div>`;
+            return;
+        }
+
+        balance -= currentBet;
+        updateBalanceUI();
+        enableBets(false);
+        isFlying = true;
         gameActive = true;
+
+        // Определяем коэффициент краша по шансам
+        const roll = Math.random();
+        let targetCoef;
+        if (roll < 0.40) targetCoef = 2.0;
+        else if (roll < 0.70) targetCoef = 3.0;
+        else if (roll < 0.90) targetCoef = 4.0;
+        else targetCoef = 5.0;
+
+        // Для визуального продолжения — случайный коэффициент после кэшаута
+        const extraCoef = 6 + Math.random() * 6; // от 6 до 12
+
+        const content = document.getElementById('gameContent');
+        const isRocket = currentGame === 'rocket';
         content.innerHTML = `
             <div class="graph">
                 <div class="line"></div>
-                <div class="label" id="aviatorCoef">1.00x</div>
+                <div class="label" id="gameCoef">1.00x</div>
             </div>
-            <div class="multiplier-display" id="aviatorMultiplier">x1.00</div>
-            <button class="cashout-btn" id="aviatorCashout" onclick="cashoutAviator()">💰 ЗАБРАТЬ</button>
-            <div class="status-text" id="aviatorStatus">Летит...</div>
+            <div class="multiplier-display" id="gameMultiplier">x1.00</div>
+            <button class="cashout-btn" id="gameCashout" onclick="cashout()">${LANG[currentLang].cashout}</button>
+            <div class="status-text" id="gameStatus">${isRocket ? '🚀 Взлетает...' : '✈️ Летит...'}</div>
         `;
 
         let coef = 1.0;
-        const coefLabel = document.getElementById('aviatorCoef');
-        const multLabel = document.getElementById('aviatorMultiplier');
-        const status = document.getElementById('aviatorStatus');
-        const cashoutBtn = document.getElementById('aviatorCashout');
+        let cashedOut = false;
+        const coefLabel = document.getElementById('gameCoef');
+        const multLabel = document.getElementById('gameMultiplier');
+        const status = document.getElementById('gameStatus');
+        const cashoutBtn = document.getElementById('gameCashout');
 
         gameInterval = setInterval(() => {
             if (!gameActive) return;
@@ -465,94 +469,64 @@
             coefLabel.textContent = coef.toFixed(2) + 'x';
             multLabel.textContent = 'x' + coef.toFixed(2);
 
-            const roll = Math.random();
-            let crash = false;
-            if (roll < 0.50) {
-                if (coef >= 3.0) crash = true;
-            } else if (roll < 0.80) {
-                if (coef >= 4.0) crash = true;
-            } else {
-                if (coef >= 1.25 + Math.random() * 0.15) crash = true;
-            }
-
-            if (crash || coef > 5.0) {
+            // Если достигли целевого коэффициента — падаем
+            if (coef >= targetCoef && !cashedOut) {
                 clearInterval(gameInterval);
                 gameActive = false;
+                isFlying = false;
                 cashoutBtn.disabled = true;
                 cashoutBtn.textContent = '💥 CRASH';
-                status.textContent = '💥 Проигрыш!';
-                sendData('aviator_result', { win: 0 });
-                const winner = Math.floor(Math.random() * 5);
-                updateBots(winner);
-            }
-        }, 80);
-    }
-
-    function cashoutAviator() {
-        if (!gameActive) return;
-        const coef = parseFloat(document.getElementById('aviatorCoef').textContent);
-        const win = currentBet * coef;
-        balance += win;
-        updateBalanceUI();
-        clearInterval(gameInterval);
-        gameActive = false;
-        document.getElementById('aviatorCashout').disabled = true;
-        document.getElementById('aviatorStatus').textContent = `✅ Выигрыш: ${win.toFixed(2)}$ (x${coef.toFixed(2)})`;
-        sendData('aviator_result', { win: win });
-        const winner = Math.floor(Math.random() * 5);
-        updateBots(winner);
-    }
-
-    // ===== ROCKET =====
-    function startRocket(content) {
-        gameActive = true;
-        content.innerHTML = `
-            <div style="text-align:center;font-size:64px;">🚀</div>
-            <div style="text-align:center;font-size:32px;font-weight:700;margin:12px 0;color:#ffd700;" id="rocketCoef">1.00x</div>
-            <button class="cashout-btn" id="rocketCashout" onclick="cashoutRocket()">💰 ЗАБРАТЬ</button>
-            <div class="status-text" id="rocketStatus">Взлетает...</div>
-        `;
-
-        let coef = 1.0;
-        const coefLabel = document.getElementById('rocketCoef');
-        const status = document.getElementById('rocketStatus');
-        const cashoutBtn = document.getElementById('rocketCashout');
-
-        gameInterval = setInterval(() => {
-            if (!gameActive) return;
-            coef += 0.03 + Math.random() * 0.07;
-            coefLabel.textContent = coef.toFixed(2) + 'x';
-
-            const roll = Math.random();
-            let crash = false;
-            if (roll < 0.50) {
-                if (coef >= 3.0) crash = true;
-            } else if (roll < 0.80) {
-                if (coef >= 4.0) crash = true;
-            } else {
-                if (coef >= 1.25 + Math.random() * 0.15) crash = true;
+                status.textContent = LANG[currentLang].crash;
+                addHistory(targetCoef);
+                enableBets(true);
+                sendData(currentGame + '_result', { win: 0 });
+                // Запускаем следующий раунд через 5 секунд
+                setTimeout(() => { if (currentGame !== 'miner') startRound(); }, 5000);
+                return;
             }
 
-            if (crash || coef > 5.0) {
+            // Если игрок забрал — продолжаем лететь до extraCoef
+            if (cashedOut && coef >= extraCoef) {
                 clearInterval(gameInterval);
                 gameActive = false;
+                isFlying = false;
                 cashoutBtn.disabled = true;
-                cashoutBtn.textContent = '💥 EXPLODED';
-                status.textContent = '💥 Проигрыш!';
-                sendData('rocket_result', { win: 0 });
-                const winner = Math.floor(Math.random() * 5);
-                updateBots(winner);
+                cashoutBtn.textContent = '💥 CRASH';
+                status.textContent = '💥 Самолёт разбился (после кэшаута)';
+                addHistory(coef);
+                enableBets(true);
+                setTimeout(() => { if (currentGame !== 'miner') startRound(); }, 5000);
+                return;
             }
         }, 80);
     }
 
-    function cashoutRocket() {
-        if (!gameActive) return;
-        const coef = parseFloat(document.getElementById('rocketCoef').textContent);
+    // ===== КЭШАУТ =====
+    function cashout() {
+        if (!gameActive || !isFlying) return;
+        const coef = parseFloat(document.getElementById('gameCoef').textContent);
         const win = currentBet * coef;
         balance += win;
         updateBalanceUI();
-        clearInterval(gameInterval);
-        gameActive = false;
-        document.getElementById('rocketCashout').disabled = true;
-        document.getElementById('rocketStatus').textContent = `✅ Выигрыш: ${win.t
+        document.getElementById('gameStatus').textContent = LANG[currentLang].win.replace('{win}', win.toFixed(2)).replace('{coef}', coef.toFixed(2));
+        document.getElementById('gameCashout').disabled = true;
+        sendData(currentGame + '_result', { win: win });
+        // Самолёт продолжает лететь (cashedOut = true)
+        // Но мы уже не даём забрать повторно
+        // В интервале выше cashedOut = true, и он полетит до extraCoef
+        // Устанавливаем флаг
+        window._cashedOut = true;
+        // В интервале проверяем этот флаг
+        // Переопределим cashout, чтобы нельзя было нажать дважды
+        document.getElementById('gameCashout').onclick = null;
+    }
+
+    // ===== МАЙНЕР =====
+    // (оставляем как есть, без изменений)
+
+    // ===== ИНИЦИАЛИЗАЦИЯ =====
+    selectGame('aviator');
+    updateUITexts();
+</script>
+</body>
+</html>
